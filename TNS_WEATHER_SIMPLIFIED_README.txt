@@ -1,0 +1,1 @@
+Simplified TNS Weather. No default Horseshoe Bay location. National map on load. Visitors search a city or grant location permission. Radar WMS: Iowa Mesonet; NWS alerts and forecast; OpenStreetMap basemap. No API keys. Experimental specialty pages and unverified data panels removed. ZIP has not been live-tested in Cloudflare.

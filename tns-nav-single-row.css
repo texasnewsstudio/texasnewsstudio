@@ -1,0 +1,32 @@
+/* TNS navigation: single row, full available width, all pages */
+nav[aria-label="Main navigation"]{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+nav[aria-label="Main navigation"] .navrow{box-sizing:border-box;display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:space-between!important;gap:0!important;width:100%!important;max-width:none!important;margin:0!important;padding:0 8px!important;min-width:max-content}
+nav[aria-label="Main navigation"] .navrow>a{box-sizing:border-box;display:flex!important;flex:1 0 auto!important;align-items:center;justify-content:center;white-space:nowrap!important;text-align:center;font-size:clamp(10px,.87vw,13px)!important;line-height:1.2!important;padding:14px clamp(5px,.85vw,16px)!important;letter-spacing:0!important}
+@media(max-width:900px){nav[aria-label="Main navigation"] .navrow>a{font-size:11px!important;padding:12px 10px!important}}
+
+/* Balanced navigation spacing: applies to all main-menu entries, including dropdowns. */
+nav[aria-label="Main navigation"] .navrow.tns-new-nav{
+  display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important;
+  justify-content:space-evenly!important;gap:0!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  padding:0 8px!important;
+}
+nav[aria-label="Main navigation"] .navrow.tns-new-nav > a,
+nav[aria-label="Main navigation"] .navrow.tns-new-nav > .tns-dropdown{
+  flex:1 1 0!important;min-width:0!important;
+  display:flex!important;align-items:stretch!important;justify-content:center!important;
+}
+nav[aria-label="Main navigation"] .navrow.tns-new-nav > a,
+nav[aria-label="Main navigation"] .navrow.tns-new-nav > .tns-dropdown > a{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  text-align:center!important;white-space:nowrap!important;
+  padding:13px 5px!important;font-size:clamp(9px,.86vw,12px)!important;
+  line-height:1.25!important;letter-spacing:0!important;
+}
+/* On narrow screens retain readable labels with horizontal scrolling, not squashing. */
+@media(max-width:1050px){
+ nav[aria-label="Main navigation"]{overflow-x:auto!important;overflow-y:visible!important}
+ nav[aria-label="Main navigation"] .navrow.tns-new-nav{min-width:1050px!important}
+ nav[aria-label="Main navigation"] .navrow.tns-new-nav > a,
+ nav[aria-label="Main navigation"] .navrow.tns-new-nav > .tns-dropdown > a{font-size:11px!important;padding:13px 7px!important}
+}

@@ -1,0 +1,1 @@
+Current temperatures panel: uses Census-derived US Atlas TopoJSON for accurate Texas outline and all 254 counties, with a color gradient clipped to the Texas shape, using fresh NWS station observations only. Color shading requires live boundary data; if unavailable it will not be fabricated. Radar and main site unchanged. Network browser test required.

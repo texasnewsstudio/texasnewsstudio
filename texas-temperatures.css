@@ -1,0 +1,14 @@
+/* Full-width Texas temperatures: stationary city groups that rotate. */
+.tx-temp-strip{background:#092540;color:#f7fbff;border-bottom:2px solid #d12b3c;overflow:hidden;font-family:inherit;width:100%}
+.tx-temp-inner{width:100%;max-width:none;box-sizing:border-box;margin:0;display:flex;align-items:center;min-height:48px;padding:0 14px;gap:12px}
+.tx-temp-label{flex:none;font-size:11px;font-weight:900;letter-spacing:.06em;color:#fff;background:#b91f32;padding:7px 10px;border-radius:3px}
+.tx-temp-viewport{flex:1;min-width:0;overflow:hidden}
+.tx-temp-track{width:100%;display:flex;align-items:center;justify-content:space-around;gap:10px;animation:none;transform:none}
+.tx-temp-item{flex:1;min-width:0;text-align:center;white-space:nowrap;font-size:12px;font-weight:700}
+.tx-temp-item b{font-size:16px;color:#fff;margin-left:4px}
+.tx-condition{display:block;color:#c0d8e9;font-weight:500;font-size:10px;margin-top:2px}
+.tx-temp-status{flex:none;font-size:10px;color:#b8cedd;white-space:nowrap}
+@media(max-width:850px){.tx-temp-inner{padding:0 8px;gap:7px}.tx-temp-label{font-size:9px;padding:6px}.tx-temp-status{display:none}}
+@media(max-width:520px){.tx-temp-item{font-size:11px}.tx-temp-item b{font-size:14px}}
+
+.tx-forecast{display:block;font-size:10px;font-weight:600;color:#b9dfef;margin-top:1px;white-space:nowrap}

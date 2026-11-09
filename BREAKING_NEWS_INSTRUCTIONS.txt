@@ -1,0 +1,8 @@
+TNS BREAKING NEWS
+
+Edit breaking-news.json to publish a breaking story.
+Set active to true, add headline, summary, optional image URL/path and updated time.
+Upload updated JSON to your Cloudflare site.
+Set active false to show the neutral placeholder again.
+The homepage compact banner links to breaking-news.html.
+No Fox branding or copied Fox content is included.

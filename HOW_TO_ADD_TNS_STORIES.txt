@@ -1,0 +1,12 @@
+TEXAS NEWS STUDIO — FEATURED NEWS UPDATE
+
+The visual design is unchanged. The hero starts with 2 stories and can expand to 10. Up to 10 stories appear in the rotating hero. The next 3 become cards immediately below. All older stories stay in the archive.
+
+To add stories in future:
+1. Extract this ZIP to a folder.
+2. Add each new article HTML file and matching image to the folder.
+3. Edit tns-featured-stories.json: insert the newest story at the beginning of the stories list. Increase hero_capacity by 1 until it reaches 10. Keep older entries; do not delete them.
+4. Run: python build_tns_featured.py (requires Python 3 and beautifulsoup4).
+5. ZIP the contents of the folder (index.html must be at ZIP root) and deploy to Cloudflare Pages.
+
+IMPORTANT: This is a static-site publishing workflow, not a live content-management system. Adding a story requires rebuilding and deploying the files. The script checks that article pages and images exist.

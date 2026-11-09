@@ -1,0 +1,1 @@
+Removed repeated items from the 3-story feature strip and weather news cards. Added three new original article pages. Original top story grid preserved. New feature-strip illustrations reuse existing artwork and should be considered illustrative. Weather news cards link to existing weather coverage; check article publication dates before presenting as new.

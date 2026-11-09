@@ -1,0 +1,1 @@
+November 9, 2026: Added three independently checked news stories to the beginning of the homepage hero rotation. Original ten hero stories and their article files remain in place. All other files unchanged. The new articles include source attribution and label reused illustrative imagery. This ZIP is ready for Cloudflare Pages upload; it has not been deployed live.

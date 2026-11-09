@@ -1,0 +1,1 @@
+Added Texas Weather to the Weather dropdown across 15 site pages. Added Texas Weather to the TNS Weather portal navigation. New texas-weather.html displays the supplied BIGWXMAP2 map via texas-weather-map.html. Existing Big Weather Studio and Trucker Weather are unchanged. Upload the complete ZIP to Cloudflare.

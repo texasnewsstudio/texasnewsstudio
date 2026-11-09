@@ -1,0 +1,2 @@
+Texas Data Center News update — October 27, 2026
+Upload all files in this ZIP to the existing Cloudflare Pages project. The six former homepage feature stories remain as permanent individual HTML files and remain linked in the News Archive. Six new explanatory articles, a new data-center hub, homepage cards, navigation link, archive entries, article index, and sitemap entries have been added. The six new pieces are background explainers, not claims of six breaking developments.

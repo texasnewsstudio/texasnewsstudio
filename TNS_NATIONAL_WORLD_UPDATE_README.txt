@@ -1,0 +1,1 @@
+October 26, 2026: Replaced six homepage featured story cards with national/world news. Added six original attributed articles, six AI-generated conceptual illustrations cropped from an AI composite, permanent archive entries and sitemap links. Existing original articles preserved.

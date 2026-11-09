@@ -1,0 +1,9 @@
+/* Texas-themed homepage intro only. All other sections remain unchanged. */
+.hero .intro {
+  background-image: linear-gradient(90deg, rgba(5,20,42,.94) 0%, rgba(5,20,42,.79) 43%, rgba(5,20,42,.36) 100%), url("assets/texas-oilfield-banner.webp") !important;
+  background-position: center, center !important;
+  background-size: cover, cover !important;
+  background-repeat: no-repeat !important;
+}
+.hero .intro .eyebrow {color:#ffe08b; text-shadow:0 2px 5px #000;}
+.hero .intro h2 {color:#fff; text-shadow:0 2px 7px #000;}

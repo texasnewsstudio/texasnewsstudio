@@ -1,0 +1,1 @@
+Regional city labels limited to exactly OKC, Little Rock, Monroe, ABQ, DEN, Wichita, STL. Texas NWS temperature markers unchanged. Other files unchanged.

@@ -1,0 +1,1 @@
+Six original Oct 27, 2026 articles and six AI editorial images added to homepage lower six slots, news archive and sitemap. Existing article pages retained. AI illustrations are symbolic, not news photographs. Upload full ZIP to Cloudflare Pages to publish.

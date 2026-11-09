@@ -1,0 +1,233 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TNS TEXAS LIVE RADAR</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>*{box-sizing:border-box}html,body{height:100%;margin:0;background:#0c1c2b;color:#fff;font-family:Arial,sans-serif}.head{height:67px;background:linear-gradient(100deg,#081929,#1a3b56);border-top:4px solid #e83954;display:flex;align-items:center;justify-content:space-between;padding:7px 17px;gap:8px}.brand{text-align:center;font-weight:1000;font-size:clamp(13px,2vw,23px);line-height:1.05}.brand span{color:#ff6173}.title{text-align:center;font-weight:950;font-size:clamp(15px,2vw,26px)}.subtitle{text-align:center;font-size:10px;color:#bad3e6;margin-top:4px}.map{height:calc(100% - 100px);background:#101820}.status{height:33px;background:#0b2438;display:flex;align-items:center;justify-content:center;padding:4px 10px;text-align:center;font-size:12px;color:#d2e4f3}.leaflet-container{background:#101820}.leaflet-control-attribution{font-size:8px!important}.temp-label{background:transparent!important;border:0!important;box-shadow:none!important}.temp-label div{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 1px 2px #081522)}.temp-label b{font-size:clamp(13px,1.7vw,23px);color:#fff;background:#112c46db;padding:2px 5px;border-radius:5px;line-height:1.1}.temp-label small{font-size:10px;font-weight:900;color:white;text-shadow:0 1px 3px #000}.embed .head{height:51px;padding:4px 7px}.embed .brand{font-size:12px}.embed .title{font-size:14px}.embed .subtitle{display:none}.embed .map{height:calc(100% - 77px)}.embed .status{height:26px;font-size:10px}.head{background:#061b35!important;border-top:4px solid #bb1839!important;border-bottom:1px solid #477299!important}.brand{font-family:Arial Black,Arial,sans-serif!important;font-weight:1000!important;color:#fff!important;letter-spacing:.2px!important;text-shadow:0 2px 2px #0009!important}.brand span{color:#fff!important}.title{color:#fff!important;font-family:Arial Black,Arial,sans-serif!important;font-weight:1000!important;letter-spacing:.4px!important;text-shadow:0 2px 2px #0008!important}.subtitle{color:#f2f7ff!important;font-weight:800!important}.status{background:#071d37!important;color:#fff!important;font-weight:700!important;border-top:1px solid #49749c!important}</style><style id="spc-broadcast-style">
+#spcLegend{position:absolute;right:0;top:67px;bottom:33px;width:205px;z-index:600;background:linear-gradient(160deg,#0a223c,#061728);border-left:3px solid #ed3952;padding:12px 10px;color:white;box-shadow:-5px 0 18px #07142170;font-family:Arial,sans-serif;overflow:auto}
+.legend-title{font-size:15px;font-weight:1000;letter-spacing:.35px;color:#fff}.legend-sub{font-size:9px;font-weight:800;letter-spacing:1px;color:#9fbed5;margin:5px 0 14px}.risk{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:11px;font-weight:900}.risk b{width:24px;min-width:24px;height:22px;display:flex;align-items:center;justify-content:center;border:1px solid #fff9;color:#fff;font-size:13px}.legend-rule{border-top:1px solid #6b8699;margin:15px 0}.legend-status{font-size:11px;color:#e5f2fa;line-height:1.45;font-weight:700}.legend-source{font-size:9px;color:#a5c0d4;margin-top:14px;letter-spacing:.5px}
+#map{width:calc(100% - 205px)!important}.embed #spcLegend{top:51px;bottom:26px;width:153px;padding:8px 7px}.embed #map{width:calc(100% - 153px)!important}.embed .legend-title{font-size:11px}.embed .legend-sub{font-size:8px;margin-bottom:8px}.embed .risk{font-size:9px;gap:4px;margin:3px 0}.embed .risk b{width:18px;min-width:18px;height:17px;font-size:10px}.embed .legend-status{font-size:9px}.embed .legend-source{font-size:8px}
+@media(max-width:480px){#spcLegend{width:130px!important}.embed #spcLegend{width:118px!important}#map{width:calc(100% - 130px)!important}.embed #map{width:calc(100% - 118px)!important}}
+</style><style id="tns-centered-map-titles">.head{display:flex!important;justify-content:center!important;align-items:center!important;text-align:center!important;padding-left:10px!important;padding-right:10px!important}.map-heading{width:100%;min-width:0;text-align:center}.map-heading .title{font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(20px,2.15vw,31px)!important;line-height:1.08!important;letter-spacing:.6px!important;font-weight:950!important;white-space:nowrap!important}.map-heading .subtitle{font-size:11px!important;letter-spacing:.65px!important;margin-top:5px!important}.embed .map-heading .title{font-size:clamp(16px,1.55vw,22px)!important}.embed .map-heading .subtitle{font-size:9px!important;margin-top:3px!important}@media(max-width:600px){.map-heading .title{font-size:19px!important}.embed .map-heading .title{font-size:17px!important}}</style><style>/* Darken only the satellite tiles, not radar or warnings */ </style>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script><style>.tns-state-abbr{background:transparent!important;border:0!important;pointer-events:none!important}.tns-state-abbr span{display:block;text-align:center;color:rgba(244,249,255,.60);font:800 17px Arial,sans-serif;letter-spacing:2px;text-shadow:0 1px 3px #06101c,0 0 7px #06101c;white-space:nowrap}</style><style id="tns-legend-redesign">
+#spcLegend{background:linear-gradient(155deg,#0d263d 0%,#07192a 100%)!important;border-left:1px solid #52708a!important;box-shadow:-4px 0 16px #0005!important;padding:0!important;display:flex;flex-direction:column;overflow:hidden!important}
+.tns-legend-head{padding:12px 11px 10px;border-bottom:1px solid #39546b;background:#15334b}
+.tns-legend-kicker{font:800 9px Arial,sans-serif;letter-spacing:1.2px;color:#88b9dc}
+#tnsLegendTitle{font:900 17px/1.1 Arial,sans-serif;color:#fff;margin-top:5px}
+#tnsLegendDesc{font:700 9px/1.3 Arial,sans-serif;color:#b7cddd;margin-top:5px;letter-spacing:.4px}
+#tnsLegendBody{padding:12px 10px;flex:1;min-height:0;overflow:auto}
+.tns-key-row{display:flex;gap:8px;align-items:center;margin:0 0 10px;font:800 11px/1.15 Arial,sans-serif;color:#eef6fc}
+.tns-key-color{width:17px;min-width:17px;height:17px;border:1px solid #ffffff55;border-radius:3px}
+.tns-legend-group{font:900 10px Arial,sans-serif;letter-spacing:.8px;color:#91bddb;margin:11px 0 9px;padding-top:8px;border-top:1px solid #365168}
+.tns-legend-note{font:600 10px/1.45 Arial,sans-serif;color:#c6d8e7;margin:10px 0}
+.tns-legend-gradient{height:17px;border-radius:3px;border:1px solid #ffffff55;margin:9px 0 5px}
+.tns-gradient-labels{display:flex;justify-content:space-between;color:#e0edf5;font:800 10px Arial,sans-serif}
+.tns-legend-foot{border-top:1px solid #39546b;padding:9px 10px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:5px;font:700 9px Arial,sans-serif;color:#a6c6da}
+.tns-live-dot{color:#6fe0a7;font-size:8px}
+.tns-legend-data{font:600 9px/1.4 Arial,sans-serif;color:#d4e3ec;padding:0 10px 8px;max-height:65px;overflow:hidden}
+.embed #tnsLegendTitle{font-size:13px}.embed .tns-legend-head{padding:8px 7px}.embed #tnsLegendBody{padding:9px 7px}.embed .tns-key-row{font-size:9px;gap:5px;margin-bottom:7px}.embed .tns-key-color{width:13px;min-width:13px;height:13px}.embed .tns-legend-foot{padding:6px;font-size:7px}.embed .tns-legend-data{padding:0 6px 6px;font-size:8px}.embed #tnsLegendDesc{font-size:8px}.embed .tns-legend-kicker{font-size:8px}
+@media(max-width:480px){.tns-key-row{font-size:9px}.tns-legend-head{padding:7px}}
+</style><style id="tns-nws-compact-legend">
+#spcLegend,#tnsLegendBody{overflow:hidden!important}
+#tnsLegendBody{padding:7px 9px!important;flex:1;min-height:0}
+.tns-legend-head{padding:7px 9px 6px!important}
+#tnsLegendTitle{font-size:14px!important}
+#tnsLegendDesc{margin-top:2px!important}
+.tns-key-row{margin-bottom:5px!important;font-size:10px!important;line-height:1.05!important}
+.tns-key-color{height:12px!important;width:12px!important;min-width:12px!important}
+.tns-legend-group{margin:6px 0 5px!important;padding-top:4px!important;font-size:9px!important}
+.tns-legend-note{display:none!important}
+.tns-legend-foot{padding:5px 8px!important}
+.tns-legend-data{max-height:none!important;overflow:hidden!important;font-size:9px!important;padding:4px 7px!important;line-height:1.2!important}
+.embed #tnsLegendTitle{font-size:12px!important}
+.embed .tns-key-row{font-size:9px!important;margin-bottom:4px!important}
+.embed .tns-legend-group{margin:4px 0!important;padding-top:3px!important}
+.embed .tns-legend-data{font-size:8px!important}
+</style></head><body><header class="head"><div class="map-heading"><div class="title">TEXAS RADAR</div><div class="subtitle">IOWA STATE NEXRAD • REFLECTIVITY</div></div></header><div id="map" class="map"></div><aside id="spcLegend" aria-label="Weather map legend"><div class="tns-legend-head"><span class="tns-legend-kicker">TNS WEATHER DATA</span><div id="tnsLegendTitle">LIVE RADAR</div><div id="tnsLegendDesc">PRECIPITATION INTENSITY</div></div><div id="tnsLegendBody"></div><div id="nwsState" hidden></div><div id="spcState" hidden></div><div class="tns-legend-foot"><span id="tnsLegendSource">IOWA STATE MESONET</span><span class="tns-live-dot">● LIVE DATA</span></div><div class="tns-legend-data" id="tnsLegendData"></div></aside><div class="status">Connecting to weather data…</div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const qs=new URLSearchParams(location.search);if(qs.has('embed'))document.documentElement.classList.add('embed');
+const status=document.querySelector('.status');
+const map=L.map('map',{zoomControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,attributionControl:true}).fitBounds([[25.7,-106.9],[36.6,-93.4]],{padding:[8,8]});
+// Match the left-side Texas Temperatures terrain basemap, without any API key.
+const terrainImagery=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Imagery: Esri'}).addTo(map);
+const relief=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,opacity:.38,attribution:'Relief: Esri'}).addTo(map);
+const terrainTint=L.rectangle([[10,-140],[55,-65]],{stroke:false,fillColor:'#071b30',fillOpacity:.14,interactive:false}).addTo(map);
+terrainTint.bringToBack();terrainImagery.bringToBack();
+map.createPane('tnsBoundaries');map.getPane('tnsBoundaries').style.zIndex='455';map.getPane('tnsBoundaries').style.pointerEvents='none';
+map.createPane('tnsStateNames');map.getPane('tnsStateNames').style.zIndex='460';map.getPane('tnsStateNames').style.pointerEvents='none';
+const boundaryLayer=L.layerGroup().addTo(map);
+const nearbyStateLayer=L.layerGroup().addTo(map);
+const nearbyStateLabels=L.layerGroup().addTo(map);
+const nearbyStateCenters=[['NM',34.35,-105.5],['OK',35.7,-99.3],['AR',34.85,-93.5],['LA',31.3,-92.5],['KS',38.4,-98.9],['CO',38.7,-105.6],['MO',37.65,-92.8]];
+for(const [abbr,lat,lon] of nearbyStateCenters){
+ L.marker([lat,lon],{interactive:false,pane:'tnsStateNames',icon:L.divIcon({className:'tns-state-abbr',html:'<span>'+abbr+'</span>',iconSize:[38,22],iconAnchor:[19,11]})}).addTo(nearbyStateLabels);
+}
+const countyStyle={color:'#354959',weight:.75,opacity:.78,fill:false,interactive:false,pane:'tnsBoundaries'};
+const stateStyle={color:'#ffffff',weight:2.9,opacity:1,fill:false,interactive:false,pane:'tnsBoundaries'};
+const nearbyStyle={color:'#e4f0ff',weight:1.05,opacity:.38,fill:false,interactive:false,pane:'tnsBoundaries'};
+const census='https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/';
+async function geo(layer,where){const p=new URLSearchParams({where,outFields:'*',outSR:'4326',f:'geojson'});const r=await fetch(census+layer+'/query?'+p,{signal:AbortSignal.timeout(11000)});if(!r.ok)throw Error('Boundary service unavailable');const j=await r.json();if(!j.features?.length)throw Error('No boundary features');return j;}
+async function boundaries(){
+ try{
+  if(typeof topojson==='undefined')throw Error('TopoJSON library unavailable');
+  const r=await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json',{signal:AbortSignal.timeout(16000)});
+  if(!r.ok)throw Error('Atlas unavailable');const topo=await r.json();
+  const states=topojson.feature(topo,topo.objects.states).features;
+  const texas=states.find(f=>String(f.id).padStart(2,'0')==='48');if(!texas)throw Error('Texas missing');
+  const nearbyIds=new Set(['04','05','08','20','22','29','35','40']);
+  L.geoJSON(states.filter(f=>nearbyIds.has(String(f.id).padStart(2,'0'))),{style:nearbyStyle}).addTo(nearbyStateLayer);
+  const counties=topojson.feature(topo,topo.objects.counties).features.filter(f=>String(f.id).padStart(5,'0').startsWith('48'));
+  L.geoJSON(counties,{style:countyStyle}).addTo(boundaryLayer);
+  L.geoJSON(texas,{style:stateStyle}).addTo(boundaryLayer);
+ }catch(e){
+  try{
+   const [states,counties]=await Promise.all([fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json',{signal:AbortSignal.timeout(12000)}).then(r=>r.json()),geo(1,"STATE='48'")]);
+   const nearbyNames=new Set(['New Mexico','Oklahoma','Arkansas','Louisiana','Kansas','Colorado','Missouri','Arizona']);
+   L.geoJSON(states.features.filter(f=>nearbyNames.has(f.properties?.name)),{style:nearbyStyle}).addTo(nearbyStateLayer);
+   L.geoJSON(counties,{style:countyStyle}).addTo(boundaryLayer);
+   const texas=states.features.find(f=>f.properties?.name==='Texas');if(texas)L.geoJSON(texas,{style:stateStyle}).addTo(boundaryLayer);
+  }catch(_){status.textContent+=' • County/state outlines temporarily unavailable';}
+ }
+}
+boundaries();
+
+let radar=null;
+function loadRadar(){
+ if(radar)map.removeLayer(radar);
+ radar=L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?',{
+ layers:'nexrad-n0r-900913',format:'image/png',transparent:true,version:'1.1.1',opacity:.87,
+ updateWhenIdle:true,attribution:'Iowa Environmental Mesonet'
+ });
+ let good=false;
+ radar.on('load',()=>{good=true;status.textContent='Iowa State NEXRAD radar • Requested '+new Date().toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'})+' CT (request time; scan time not verified)'});
+ radar.on('tileerror',()=>{if(!good)status.textContent='Radar service unavailable • Basemap and boundaries remain visible'});
+ radar.addTo(map);
+ window.tnsRadarLayer=radar; if(window.tnsCurrentView && window.tnsCurrentView!=="radar")map.removeLayer(radar);
+}
+loadRadar();setInterval(loadRadar,300000);
+</script><style>.tns-city{background:transparent!important;border:0!important}.tns-city span{font-size:10px;font-weight:900;color:#172438;text-shadow:0 1px #fff,1px 0 #fff,-1px 0 #fff,0 -1px #fff;white-space:nowrap}</style><script>
+(function(){
+ const legend=document.getElementById('spcState');
+ const service='https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/1/query';
+ const spc=L.geoJSON(null,{interactive:true,onEachFeature:(f,l)=>{const p=f.properties||{};l.bindPopup(`<strong>SPC Day 1 Outlook</strong><div>Risk category: ${Number(p.dn)||"See official outlook"}</div>`);},style:f=>{
+  const p=f.properties||{},dn=Number(p.dn);
+  const colors={2:'#b7d9a2',3:'#80c37a',4:'#f2db62',5:'#f1a34b',6:'#ed5958',8:'#ff68ca'};
+  const color=colors[dn]||'#b7d9a2';
+  return {color,weight:1.7,opacity:.95,fillColor:color,fillOpacity:.31};
+ }}).addTo(map);
+ window.tnsSpcLayer=spc;
+ const cityLocations=[['Amarillo',35.22,-101.83],['Lubbock',33.58,-101.85],['Wichita Falls',33.91,-98.49],['Dallas',32.78,-96.80],['Fort Worth',32.76,-97.33],['Tyler',32.35,-95.30],['Abilene',32.45,-99.73],['Midland',31.99,-102.08],['El Paso',31.76,-106.49],['Waco',31.55,-97.15],['Austin',30.27,-97.74],['San Antonio',29.42,-98.49],['Houston',29.76,-95.37],['Corpus Christi',27.80,-97.40],['Laredo',27.53,-99.48],['Brownsville',25.90,-97.50]];
+ const city=L.layerGroup().addTo(map);
+ for(const [name,lat,lon] of cityLocations){
+  L.marker([lat,lon],{interactive:false,icon:L.divIcon({className:'tns-city',html:'<span>'+name+'</span>',iconSize:[90,15],iconAnchor:[45,8]})}).addTo(city);
+ }
+ let lastSuccess=0;
+ async function updateSPC(){
+  try{
+   const q=new URLSearchParams({where:'1=1',outFields:'*',outSR:'4326',f:'geojson',_t:String(Date.now())});
+   const r=await fetch(service+'?'+q,{cache:'no-store',signal:AbortSignal.timeout(14000)});
+   if(!r.ok)throw new Error('NOAA HTTP '+r.status);
+   const data=await r.json();
+   if(!Array.isArray(data.features))throw new Error('Invalid NOAA response');
+   // Do not discard polygons based on ambiguous expiry field parsing.
+   spc.clearLayers();spc.addData(data.features);if(window.tnsCurrentView && window.tnsCurrentView!=="outlook" && map.hasLayer(spc))map.removeLayer(spc);
+   lastSuccess=Date.now();
+   const risk=new Set(data.features.map(x=>Number(x.properties?.dn)));
+   legend.textContent=data.features.length?'SPC outlook received • '+data.features.length+' official risk areas. Radar shown beneath.':'NOAA reports no outlook polygons for this layer.';
+  }catch(e){
+   legend.textContent=lastSuccess?'SPC refresh delayed • previously loaded outlook may be stale':'SPC data unavailable • radar continues. No risk areas invented.';
+   if(lastSuccess&&Date.now()-lastSuccess>30*60000)spc.clearLayers();
+  }
+ }
+ updateSPC();setInterval(updateSPC,300000);
+})();
+</script><script id="tns-nws-home-radar-alerts">
+(function(){
+ const info=document.getElementById('nwsState'),legend=document.getElementById('tnsLegendData');
+ const alerts=L.geoJSON(null,{style:f=>{
+  const p=f.properties||{},e=String(p.event||'').toLowerCase(),w=e.includes('watch');
+  const details=[p.headline,p.description,p.parameters?.tornadoDetection?.join(' '),p.parameters?.thunderstormDamageThreat?.join(' ')].filter(Boolean).join(' ').toLowerCase();
+  const pds=/particularly dangerous situation|\bpds\b/.test(details);
+  const c=pds&&e.includes('warning')?'#9235c8':e.includes('tornado warning')?'#ed1c24':e.includes('severe thunderstorm warning')?'#ff8c00':e.includes('flash flood warning')?'#19b65b':e.includes('tornado watch')?'#800020':e.includes('severe thunderstorm watch')?'#ffd600':'#42c9ef';
+  return {color:c,weight:e.includes('tornado warning')?4:3,opacity:1,fillColor:c,fillOpacity:w?.09:.19};
+ },onEachFeature:(f,l)=>{
+  const p=f.properties||{},safe=x=>String(x||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  l.bindPopup('<strong>'+safe(p.event)+'</strong><p>'+safe(p.headline||p.areaDesc)+'</p><small>'+safe(p.expires||'')+'</small>');
+ }}).addTo(map);
+ window.tnsAlertsLayer=alerts;
+ let last=0,busy=false;
+ const setInfo=t=>{info.textContent=t;if(window.tnsCurrentView==='alerts'&&legend)legend.textContent=t};
+ async function getJSON(url){
+  const c=new AbortController(),timeout=setTimeout(()=>c.abort(),12000);
+  try{const r=await fetch(url,{headers:{Accept:'application/geo+json'},cache:'no-store',signal:c.signal});
+   if(!r.ok)throw Error('HTTP '+r.status);return await r.json();
+  }finally{clearTimeout(timeout)}
+ }
+ async function refresh(){
+  if(busy)return;busy=true;
+  try{
+   // The NWS API accepts area=TX. Do not append unknown cache-buster parameters.
+   // Fallback to the all-active endpoint if the state-filtered service is unavailable.
+   let j,filteredByState=true;
+   try{j=await getJSON('https://api.weather.gov/alerts/active?area=TX')}
+   catch(e){filteredByState=false;j=await getJSON('https://api.weather.gov/alerts/active')}
+   if(!Array.isArray(j.features))throw Error('Invalid NWS response');
+   const active=j.features.filter(f=>{
+    const p=f.properties||{};
+    if(!/warning|watch/i.test(String(p.event||'')))return false;
+    if(filteredByState)return true; // NWS itself filtered to Texas; no second unreliable filter.
+    return (p.geocode?.UGC||[]).some(x=>/^TX[CZ]/i.test(x))||
+      (p.affectedZones||[]).some(x=>/\/TX[CZ]/i.test(x));
+   });
+   const mapped=active.filter(f=>f.geometry&&/Polygon/.test(f.geometry.type));
+   // Never show a made-up county polygon for a warning without geometry.
+   alerts.clearLayers();alerts.addData(mapped);
+   if(window.tnsCurrentView==='alerts'&&!map.hasLayer(alerts))alerts.addTo(map);
+   if(window.tnsCurrentView&&window.tnsCurrentView!=='alerts'&&map.hasLayer(alerts))map.removeLayer(alerts);
+   else if(map.hasLayer(alerts))alerts.bringToFront();
+   const tw=active.filter(f=>/tornado warning/i.test(f.properties?.event||'')).length;
+   const sw=active.filter(f=>/severe thunderstorm warning/i.test(f.properties?.event||'')).length;
+   const watches=active.filter(f=>/watch/i.test(f.properties?.event||'')).length;
+   const missing=active.length-mapped.length;
+   last=Date.now();
+   const ct=new Date(last).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'});
+   setInfo('NWS LIVE · '+tw+' tornado warnings · '+sw+' severe warnings · '+watches+' watches · '+mapped.length+' mapped'+(missing?' · '+missing+' without polygons':'')+' · '+ct+' CT');
+  }catch(e){
+   setInfo(last?'NWS update failed · last successful check '+new Date(last).toLocaleTimeString():'NWS CONNECTION FAILED · Unable to verify active alerts');
+  }finally{busy=false}
+ }
+ window.tnsRefreshWarnings=refresh;
+ refresh();setInterval(refresh,120000);
+})();
+</script><style id="tns-weather-carousel-style">.tns-carousel-indicator{position:absolute;bottom:29px;left:12px;z-index:900;background:rgba(3,16,30,.85);border:1px solid rgba(255,255,255,.32);border-radius:5px;color:#fff;font:700 11px Arial,sans-serif;padding:5px 9px;pointer-events:none;letter-spacing:.5px}.embed .tns-carousel-indicator{bottom:25px;font-size:10px;padding:4px 7px}</style>
+<script id="tns-weather-carousel">
+(function(){
+ if(!new URLSearchParams(location.search).has('carousel'))return;
+ const views=[['radar','LIVE RADAR'],['outlook','SEVERE OUTLOOK'],['alerts','NWS ALERTS & WATCHES'],['satellite','GOES INFRARED']];
+ const badge=document.createElement('div');badge.className='tns-carousel-indicator';badge.setAttribute('aria-live','off');document.body.appendChild(badge);
+ const title=document.querySelector('.map-heading .title'),subtitle=document.querySelector('.map-heading .subtitle');
+ const legend=document.getElementById('spcLegend'),legendTitle=document.getElementById('tnsLegendTitle'),legendDesc=document.getElementById('tnsLegendDesc'),legendBody=document.getElementById('tnsLegendBody'),legendSource=document.getElementById('tnsLegendSource'),legendData=document.getElementById('tnsLegendData');
+ const row=(color,label)=>'<div class="tns-key-row"><i class="tns-key-color" style="background:'+color+'"></i><span>'+label+'</span></div>';
+ const legends={
+ radar:{title:'RADAR INTENSITY',desc:'APPROXIMATE REFLECTIVITY • dBZ',source:'IEM / NEXRAD',body:'<div class="tns-legend-gradient" style="background:linear-gradient(90deg,#72a9e7,#24bd87,#8bc943,#e8d447,#f49d33,#e7473c,#b63d9b)"></div><div class="tns-gradient-labels"><span>LIGHT</span><span>MODERATE</span><span>HEAVY</span></div><p class="tns-legend-note">Radar reflectivity indicates precipitation intensity, not a direct rainfall rate.</p>'},
+ outlook:{title:'SPC STORM RISK',desc:'DAY 1 • CATEGORICAL OUTLOOK',source:'NOAA STORM PREDICTION CENTER',body:row('#ff68ca','5 HIGH')+row('#ed5958','4 MODERATE')+row('#f1a34b','3 ENHANCED')+row('#f2db62','2 SLIGHT')+row('#80c37a','1 MARGINAL')+row('#b7d9a2','GENERAL THUNDERSTORMS')},
+ alerts:{title:'NWS ALERT TYPES',desc:'ACTIVE WARNINGS & WATCHES',source:'NATIONAL WEATHER SERVICE',body:'<div class="tns-legend-group">WARNINGS</div>'+row('#ed1c24','TORNADO WARNING')+row('#ff8c00','SEVERE T-STORM WARNING')+row('#19b65b','FLASH FLOOD WARNING')+row('#9235c8','PDS WARNING')+'<div class="tns-legend-group">WATCHES</div>'+row('#800020','TORNADO WATCH')+row('#ffd600','SEVERE T-STORM WATCH')+'<div class="tns-legend-group">OTHER ALERTS</div>'+row('#35b9e4','OTHER NWS ALERT')},
+ satellite:{title:'INFRARED CLOUDS',desc:'GOES EAST • CHANNEL 13',source:'IEM / NOAA GOES',body:'<div class="tns-legend-gradient" style="background:linear-gradient(90deg,#171c27,#59677c,#abb7c9,#f1f5fa)"></div><div class="tns-gradient-labels"><span>WARMER</span><span>COLDER</span></div><p class="tns-legend-note">Infrared measures cloud-top brightness temperature, including at night. Colors depend on the satellite product.</p>'}
+ };
+ const satellite=L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/goes_east.cgi?',{layers:'conus_ch13',format:'image/png',transparent:true,version:'1.1.1',opacity:.94,updateWhenIdle:true,attribution:'GOES East IR: Iowa Environmental Mesonet'});
+ window.tnsInfraredLayer=satellite;
+ let index=0,paused=false;
+ function show(i){
+   index=i;const view=views[i][0];window.tnsCurrentView=view;
+   const layers=[[window.tnsRadarLayer,'radar'],[window.tnsSpcLayer,'outlook'],[window.tnsAlertsLayer,'alerts'],[satellite,'satellite']];
+   for(const [layer,name] of layers){if(!layer)continue;if(name===view){if(!map.hasLayer(layer))layer.addTo(map)}else if(map.hasLayer(layer))map.removeLayer(layer)}
+   if(view==='alerts'){if(window.tnsRefreshWarnings)window.tnsRefreshWarnings();if(window.tnsAlertsLayer)window.tnsAlertsLayer.bringToFront();}
+   if(view==='satellite'){satellite.bringToBack();terrainImagery.bringToBack();satellite.bringToFront();}
+   if(title)title.textContent=views[i][1];
+   if(subtitle)subtitle.textContent=view==='radar'?'IOWA STATE NEXRAD • REFLECTIVITY':view==='outlook'?'NOAA STORM PREDICTION CENTER':view==='alerts'?'NATIONAL WEATHER SERVICE • ACTIVE ALERTS':'GOES EAST • CHANNEL 13 INFRARED';
+   badge.textContent=views[i][1]+'  •  '+(i+1)+'/4';
+   const l=legends[view];legendTitle.textContent=l.title;legendDesc.textContent=l.desc;legendBody.innerHTML=l.body;legendSource.textContent=l.source;
+   legendData.textContent=view==='alerts'?document.getElementById('nwsState').textContent:view==='outlook'?document.getElementById('spcState').textContent:'';
+   if(legend)legend.style.display='flex';
+   const mapEl=document.getElementById('map');if(mapEl)mapEl.style.width='';
+   setTimeout(()=>map.invalidateSize(false),80);
+ }
+ show(0);setInterval(()=>{if(!paused)show((index+1)%views.length)},10000);
+ window.addEventListener('message',e=>{if(e.data&&e.data.type==='tns-carousel-pause')paused=!!e.data.paused});
+ document.addEventListener('visibilitychange',()=>{paused=document.hidden});
+})();
+</script></body></html>

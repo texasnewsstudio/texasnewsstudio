@@ -1,0 +1,14 @@
+/* TNS clean newsroom refinement — restrained visual polish, no layout changes */
+:root{--bg:#081321;--panel:#102237;--panel2:#142d45;--line:#36516a;--text:#f5f8fc;--muted:#b6c8d7;--red:#cf2738;--gold:#f0c76a;--blue:#70b7f0}
+body{background:linear-gradient(180deg,#0b1929 0,#081321 450px);}
+.mast{background:linear-gradient(110deg,#102d48,#0b1b30 65%,#182338);border-bottom:3px solid #d42a3c}
+.mast-inner{min-height:100px}
+.brand h1{font-weight:900;letter-spacing:-1px;text-shadow:0 2px 9px rgba(0,0,0,.25)}
+nav{background:#0b2035} .navrow a{transition:background .15s ease} .navrow a:hover{background:#254966}
+.panel{border:1px solid #34506a;box-shadow:0 3px 14px rgba(0,0,0,.13)}
+.panel-title,.section-head{background:linear-gradient(90deg,#153651,#11283f);border-bottom:1px solid #3a5971}
+.intro{background:linear-gradient(145deg,#17344f,#0e2135 72%);padding:24px}
+.intro h2{font-size:clamp(27px,2.6vw,39px);line-height:1.15}
+.ticker{border-radius:4px} .button{transition:filter .15s ease,background .15s ease}
+.story{border-color:#2f4b62} .story:hover{background:rgba(83,146,189,.07)}
+@media(max-width:750px){.mast-inner{min-height:90px}.intro{padding:19px}.intro h2{font-size:28px}}

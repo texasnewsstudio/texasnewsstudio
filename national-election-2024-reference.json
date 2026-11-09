@@ -1,0 +1,314 @@
+{
+  "year": 2024,
+  "election": "Presidential electoral votes",
+  "republican": 312,
+  "democratic": 226,
+  "states": {
+    "AK": {
+      "name": "Alaska",
+      "party": "R",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "WA": {
+      "name": "Washington",
+      "party": "D",
+      "electoralVotes": 12,
+      "note": ""
+    },
+    "MT": {
+      "name": "Montana",
+      "party": "R",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "ND": {
+      "name": "North Dakota",
+      "party": "R",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "MN": {
+      "name": "Minnesota",
+      "party": "D",
+      "electoralVotes": 10,
+      "note": ""
+    },
+    "WI": {
+      "name": "Wisconsin",
+      "party": "R",
+      "electoralVotes": 10,
+      "note": ""
+    },
+    "MI": {
+      "name": "Michigan",
+      "party": "R",
+      "electoralVotes": 15,
+      "note": ""
+    },
+    "VT": {
+      "name": "Vermont",
+      "party": "D",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "ME": {
+      "name": "Maine",
+      "party": "D",
+      "electoralVotes": 4,
+      "note": "Split allocation: Harris 3, Trump 1"
+    },
+    "OR": {
+      "name": "Oregon",
+      "party": "D",
+      "electoralVotes": 8,
+      "note": ""
+    },
+    "ID": {
+      "name": "Idaho",
+      "party": "R",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "SD": {
+      "name": "South Dakota",
+      "party": "R",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "IA": {
+      "name": "Iowa",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "IL": {
+      "name": "Illinois",
+      "party": "D",
+      "electoralVotes": 19,
+      "note": ""
+    },
+    "IN": {
+      "name": "Indiana",
+      "party": "R",
+      "electoralVotes": 11,
+      "note": ""
+    },
+    "OH": {
+      "name": "Ohio",
+      "party": "R",
+      "electoralVotes": 17,
+      "note": ""
+    },
+    "PA": {
+      "name": "Pennsylvania",
+      "party": "R",
+      "electoralVotes": 19,
+      "note": ""
+    },
+    "NH": {
+      "name": "New Hampshire",
+      "party": "D",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "CA": {
+      "name": "California",
+      "party": "D",
+      "electoralVotes": 54,
+      "note": ""
+    },
+    "NV": {
+      "name": "Nevada",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "WY": {
+      "name": "Wyoming",
+      "party": "R",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "NE": {
+      "name": "Nebraska",
+      "party": "R",
+      "electoralVotes": 5,
+      "note": "Split allocation: Trump 4, Harris 1"
+    },
+    "MO": {
+      "name": "Missouri",
+      "party": "R",
+      "electoralVotes": 10,
+      "note": ""
+    },
+    "KY": {
+      "name": "Kentucky",
+      "party": "R",
+      "electoralVotes": 8,
+      "note": ""
+    },
+    "WV": {
+      "name": "West Virginia",
+      "party": "R",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "VA": {
+      "name": "Virginia",
+      "party": "D",
+      "electoralVotes": 13,
+      "note": ""
+    },
+    "NY": {
+      "name": "New York",
+      "party": "D",
+      "electoralVotes": 28,
+      "note": ""
+    },
+    "MA": {
+      "name": "Massachusetts",
+      "party": "D",
+      "electoralVotes": 11,
+      "note": ""
+    },
+    "AZ": {
+      "name": "Arizona",
+      "party": "R",
+      "electoralVotes": 11,
+      "note": ""
+    },
+    "UT": {
+      "name": "Utah",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "CO": {
+      "name": "Colorado",
+      "party": "D",
+      "electoralVotes": 10,
+      "note": ""
+    },
+    "KS": {
+      "name": "Kansas",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "AR": {
+      "name": "Arkansas",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "TN": {
+      "name": "Tennessee",
+      "party": "R",
+      "electoralVotes": 11,
+      "note": ""
+    },
+    "NC": {
+      "name": "North Carolina",
+      "party": "R",
+      "electoralVotes": 16,
+      "note": ""
+    },
+    "SC": {
+      "name": "South Carolina",
+      "party": "R",
+      "electoralVotes": 9,
+      "note": ""
+    },
+    "RI": {
+      "name": "Rhode Island",
+      "party": "D",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "HI": {
+      "name": "Hawaii",
+      "party": "D",
+      "electoralVotes": 4,
+      "note": ""
+    },
+    "NM": {
+      "name": "New Mexico",
+      "party": "D",
+      "electoralVotes": 5,
+      "note": ""
+    },
+    "OK": {
+      "name": "Oklahoma",
+      "party": "R",
+      "electoralVotes": 7,
+      "note": ""
+    },
+    "LA": {
+      "name": "Louisiana",
+      "party": "R",
+      "electoralVotes": 8,
+      "note": ""
+    },
+    "MS": {
+      "name": "Mississippi",
+      "party": "R",
+      "electoralVotes": 6,
+      "note": ""
+    },
+    "AL": {
+      "name": "Alabama",
+      "party": "R",
+      "electoralVotes": 9,
+      "note": ""
+    },
+    "GA": {
+      "name": "Georgia",
+      "party": "R",
+      "electoralVotes": 16,
+      "note": ""
+    },
+    "FL": {
+      "name": "Florida",
+      "party": "R",
+      "electoralVotes": 30,
+      "note": ""
+    },
+    "CT": {
+      "name": "Connecticut",
+      "party": "D",
+      "electoralVotes": 7,
+      "note": ""
+    },
+    "TX": {
+      "name": "Texas",
+      "party": "R",
+      "electoralVotes": 40,
+      "note": ""
+    },
+    "DE": {
+      "name": "Delaware",
+      "party": "D",
+      "electoralVotes": 3,
+      "note": ""
+    },
+    "NJ": {
+      "name": "New Jersey",
+      "party": "D",
+      "electoralVotes": 14,
+      "note": ""
+    },
+    "MD": {
+      "name": "Maryland",
+      "party": "D",
+      "electoralVotes": 10,
+      "note": ""
+    },
+    "DC": {
+      "name": "District of Columbia",
+      "party": "D",
+      "electoralVotes": 3,
+      "note": ""
+    }
+  }
+}

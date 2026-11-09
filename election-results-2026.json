@@ -1,0 +1,121 @@
+{
+  "updatedAt": "November 3, 2026, 11:40 p.m. CST (supplied site snapshot; not independently reverified)",
+  "source": "Previously included Texas News Studio election snapshot; verify against Texas Secretary of State before publication",
+  "races": {
+    "senate": {
+      "rows": [
+        [
+          "James Talarico",
+          "Democratic",
+          4546036
+        ],
+        [
+          "Ken Paxton",
+          "Republican",
+          3567899
+        ],
+        [
+          "Ted Brown",
+          "Libertarian",
+          143283
+        ],
+        [
+          "Avery Ayers",
+          "Write-in",
+          1162
+        ],
+        [
+          "Jade Simmons",
+          "Write-in",
+          906
+        ],
+        [
+          "Bradford 'Brad' Hall",
+          "Write-in",
+          803
+        ]
+      ]
+    },
+    "comptroller": {
+      "rows": [
+        [
+          "Sarah Eckhardt",
+          "Democratic",
+          4216271
+        ],
+        [
+          "Don Huffines",
+          "Republican",
+          3766140
+        ],
+        [
+          "V. Alonzo Echavarria-Garza",
+          "Libertarian",
+          138948
+        ],
+        [
+          "Shehla Faizi",
+          "Green",
+          49164
+        ]
+      ]
+    },
+    "land": {
+      "rows": [
+        [
+          "Benjamin Flores",
+          "Democratic",
+          4206588
+        ],
+        [
+          "Dawn Buckingham",
+          "Republican",
+          3824353
+        ],
+        [
+          "Neill Snider",
+          "Libertarian",
+          116716
+        ]
+      ]
+    },
+    "agriculture": {
+      "rows": [
+        [
+          "Clayton Tucker",
+          "Democratic",
+          4192122
+        ],
+        [
+          "Nate Sheets",
+          "Republican",
+          3791800
+        ],
+        [
+          "Austin R. Kelly",
+          "Libertarian",
+          150065
+        ]
+      ]
+    },
+    "railroad": {
+      "rows": [
+        [
+          "Jon Rosenthal",
+          "Democratic",
+          4287415
+        ],
+        [
+          "Bo French",
+          "Republican",
+          3695418
+        ],
+        [
+          "Arthur Dibianca",
+          "Libertarian",
+          142139
+        ]
+      ]
+    }
+  }
+}

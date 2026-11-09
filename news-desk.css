@@ -1,0 +1,8 @@
+/* Isolated headline rail; no homepage layout changes. */
+.ticker{display:flex;align-items:center;gap:0;min-width:0;overflow:hidden;padding:0!important;min-height:44px}
+.ticker>strong{flex:0 0 auto;align-self:stretch;display:flex;align-items:center;padding:10px 14px;white-space:nowrap;letter-spacing:.05em}
+#ticker-story{display:block;flex:1 1 auto;min-width:0;padding:9px 14px;color:#173653;text-decoration:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:800}
+#ticker-story:hover{text-decoration:underline;color:#b51b2e}
+#ticker-text{color:inherit!important}
+#ticker-status{font-size:10px;color:#587089;flex:0 0 auto;padding:0 12px 0 2px;white-space:nowrap}
+@media(max-width:650px){.ticker>strong{padding:8px 9px;font-size:11px}#ticker-story{padding:8px;font-size:12px}#ticker-status{display:none}}

@@ -1,0 +1,262 @@
+{
+  "updatedAt": null,
+  "status": "No verified national result dataset loaded",
+  "note": "This is an offline state locator, not a live election-results feed. Add verified race results to this file for publication.",
+  "states": {
+    "AL": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "AK": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "AZ": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "AR": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "CA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "CO": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "CT": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "DE": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "DC": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "FL": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "GA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "HI": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "ID": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "IL": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "IN": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "IA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "KS": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "KY": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "LA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "ME": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MD": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MI": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MN": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MS": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MO": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "MT": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NE": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NV": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NH": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NJ": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NM": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NY": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "NC": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "ND": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "OH": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "OK": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "OR": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "PA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "RI": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "SC": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "SD": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "TN": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "TX": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "UT": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "VT": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "VA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "WA": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "WV": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "WI": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    },
+    "WY": {
+      "senate": [],
+      "governor": [],
+      "house": []
+    }
+  }
+}

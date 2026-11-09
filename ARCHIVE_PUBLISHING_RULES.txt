@@ -1,0 +1,1 @@
+PERMANENT RULE: On every daily update preserve all previous article HTML and image files; add each new article to news-archive.html, tns-article-index.json and sitemap.xml. Never replace archive with homepage stories only. Homepage has exactly nine current Top Stories. Archive contains past and current standalone articles.

@@ -1,0 +1,1 @@
+October 26, 2026: Updated homepage breaking headline and breaking-news.json, created breaking-news.html, added permanent News Archive entry and sitemap URL. Specific Bank of America/Bloomberg attribution is unverified; article flags this. Existing original articles and assets preserved.

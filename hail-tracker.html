@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TNS Hail Tracker | Texas News Studio</title><meta name="description" content="Explore reported hail sizes and active severe thunderstorm warnings on the Texas News Studio hail tracker."><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#071321;color:#eef5ff;font:15px system-ui,Arial,sans-serif}a{color:#91d5ff}.wrap{max-width:1400px;margin:auto;padding:18px}header{background:#0b2038;border-bottom:3px solid #e43e46}.brand{font-weight:900;font-size:22px;letter-spacing:.6px;color:white;text-decoration:none}.sub{font-size:12px;letter-spacing:2px;color:#90abc5}.nav{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}.nav a{text-decoration:none;color:#d4e7fa;font-weight:700}h1{font-size:clamp(26px,4vw,40px);margin:14px 0 6px}p{line-height:1.5}.intro{color:#c0d1e2;margin:0 0 16px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:16px}.panel{background:#10253b;border:1px solid #29435c;border-radius:12px;overflow:hidden}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px}.toolbar button,.toolbar select{background:#193d5c;color:#fff;border:1px solid #46718f;border-radius:7px;padding:9px 12px;cursor:pointer;font:inherit}.toolbar button:focus-visible{outline:2px solid #9de0ff}.toolbar button.active{background:#146e9e}.toolbar label{display:flex;align-items:center;gap:6px}.toolbar input{accent-color:#21b6f3}#map{height:610px;background:#172b40}.status{padding:9px 13px;font-size:12px;color:#c1d5e5;background:#0b1d30}.side{padding:16px}.metric{background:#163550;border-radius:9px;padding:13px;margin:12px 0}.metric b{display:block;font-size:24px}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;padding:12px}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px}.report{padding:11px 0;border-bottom:1px solid #29435c;font-size:13px}.report strong{display:block}.foot{font-size:12px;color:#abc1d5;margin:20px 0}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#102b43;color:#fff}.leaflet-container a{color:#60c5ff}@media(max-width:850px){.layout{grid-template-columns:1fr}#map{height:480px}}
+</style></head><body><header><div class="wrap"><a class="brand" href="index.html">TEXAS NEWS STUDIO</a><div class="sub">TNS WEATHER LABS</div><nav class="nav"><a href="index.html">HOME</a><a href="tns-weather.html">WEATHER</a><a href="weather-models.html">WEATHER MODELS</a><a href="severe-weather-center.html">SEVERE WEATHER CENTER</a><a href="texas-weather-map.html">WEATHER ALERTS</a></nav></div></header><main class="wrap"><div style="color:#f46b70;font-weight:800;letter-spacing:1.5px">INTERACTIVE WEATHER INTELLIGENCE</div><h1>Hail Tracker</h1><p class="intro">Explore NOAA-derived hail reports, geographic report hotspots, and active National Weather Service severe thunderstorm warning areas. Reports are observations, not radar-estimated hail swaths.</p><div class="layout"><section class="panel"><div class="toolbar"><button id="texas" class="active">Texas</button><button id="usa">United States</button><label><input id="reports" type="checkbox" checked> Hail reports</label><label><input id="warnings" type="checkbox" checked> Active warnings</label><label><input id="hotspots" type="checkbox" checked> Hail hotspots</label><select id="base" aria-label="Base map"><option value="street">Street map</option><option value="topo">Terrain map</option></select><button id="refresh">Refresh</button></div><div id="map" role="application" aria-label="Interactive hail reports and warnings map"></div><div class="legend"><span><i class="dot" style="background:#40b9ff"></i>Under 1″</span><span><i class="dot" style="background:#f4d451"></i>1–1.74″</span><span><i class="dot" style="background:#f28a3d"></i>1.75–2.49″</span><span><i class="dot" style="background:#eb4555"></i>2.5″+</span><span><i class="dot" style="background:#ff5474"></i>Warning area</span></div><div class="status" id="status" role="status">Loading current reports and warnings…</div></section><aside class="panel side"><h2 style="margin:0">Hail Situation</h2><div class="metric"><span>Reported hail locations · available feed</span><b id="count">—</b></div><div class="metric"><span>Largest reported hail diameter</span><b id="largest">—</b></div><div class="metric"><span>Active severe thunderstorm warnings</span><b id="warncount">—</b></div><h3>Hail Hotspots</h3><p style="font-size:12px;color:#a8c5dc">Ranked by report counts in the currently available NOAA report feed. These are report clusters, not verified hail damage areas or historical climatology.</p><div id="hotspotlist" aria-live="polite">Loading hotspots…</div><h3>Latest reports</h3><div id="recent">Loading…</div><p style="font-size:12px;color:#a8c5dc">Reports are preliminary and may be delayed, duplicated, or revised. Warning polygons show affected areas, not confirmed hail damage.</p><p><a href="https://www.spc.noaa.gov/climo/reports/" target="_blank" rel="noopener">Official SPC storm reports</a></p><p><a href="https://www.weather.gov/" target="_blank" rel="noopener">Official NWS alerts</a></p></aside></div><p class="foot">Sources: NOAA/NWS Storm Prediction Center reports via Esri's NOAA Storm Reports feed; active warnings from the NWS Alerts API. Public data, no API keys or Cloudflare Workers. For immediate safety decisions, follow official NWS warnings. © Texas News Studio.</p></main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+(function(){
+'use strict';
+const map=L.map('map',{preferCanvas:true}).setView([31.2,-99.1],6);
+const street=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18});
+const topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors, SRTM | © OpenTopoMap',maxZoom:17});
+street.addTo(map);
+const hail=L.layerGroup().addTo(map),warnings=L.layerGroup().addTo(map),hotspotLayer=L.layerGroup().addTo(map);
+const $=id=>document.getElementById(id);
+const safe=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const color=n=>n>=2.5?'#eb4555':n>=1.75?'#f28a3d':n>=1?'#f4d451':'#40b9ff';
+function zoom(us){map.setView(us?[39,-97]:[31.2,-99.1],us?4:6);$('texas').classList.toggle('active',!us);$('usa').classList.toggle('active',us)}
+$('texas').onclick=()=>zoom(false);$('usa').onclick=()=>zoom(true);
+$('reports').onchange=()=>$('reports').checked?hail.addTo(map):map.removeLayer(hail);
+$('warnings').onchange=()=>$('warnings').checked?warnings.addTo(map):map.removeLayer(warnings);$('hotspots').onchange=()=>$('hotspots').checked?hotspotLayer.addTo(map):map.removeLayer(hotspotLayer);
+$('base').onchange=()=>{map.removeLayer(street);map.removeLayer(topo);($('base').value==='topo'?topo:street).addTo(map);hail.bringToFront&&hail.bringToFront()};
+async function fetchJSON(url){const r=await fetch(url,{cache:'no-store',headers:{Accept:'application/geo+json, application/json'}});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
+async function load(){
+ $('status').textContent='Refreshing NOAA hail reports and NWS warnings…';
+ const results=await Promise.allSettled([
+ fetchJSON('https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NOAA_storm_reports_v1/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson'),
+ fetchJSON('https://api.weather.gov/alerts/active?event=Severe%20Thunderstorm%20Warning')
+ ]);
+ let msgs=[];
+ if(results[0].status==='fulfilled'){
+  const data=results[0].value;hail.clearLayers();const rows=(data.features||[]).filter(f=>f.geometry&&f.geometry.type==='Point');let max=0;
+  rows.forEach(f=>{const p=f.properties||{},v=Number(p.HAIL_SIZE)||0;max=Math.max(max,v);const c=f.geometry.coordinates;
+   if(!Array.isArray(c)||!Number.isFinite(c[0])||!Number.isFinite(c[1]))return;
+   const popup='<b>'+safe(p.LOCATION||'Reported hail')+'</b><br>'+safe(p.COUNTY||'')+' '+safe(p.STATE||'')+'<br>Reported size: '+(v?v.toFixed(2)+' inches':'Not specified')+'<br>'+safe(p.COMMENTS||'Preliminary report');
+   L.circleMarker([c[1],c[0]],{radius:Math.max(6,Math.min(15,5+v*3)),color:'#fff',weight:1,fillColor:color(v),fillOpacity:.9}).bindPopup(popup).addTo(hail)
+  });$('count').textContent=rows.length.toLocaleString();$('largest').textContent=max?max.toFixed(2)+'″':'None reported';
+
+  // Group nearby reports by county and state, not by unverified radar-derived hail swaths.
+  hotspotLayer.clearLayers();
+  const grouped=new Map();
+  rows.forEach(f=>{
+   const p=f.properties||{},c=f.geometry?.coordinates;
+   if(!Array.isArray(c)||!Number.isFinite(c[0])||!Number.isFinite(c[1]))return;
+   const county=String(p.COUNTY||'Unknown county').trim(),state=String(p.STATE||'').trim();
+   const key=(county+'|'+state).toUpperCase();
+   if(!grouped.has(key))grouped.set(key,{county,state,count:0,largest:0,lat:0,lon:0});
+   const g=grouped.get(key);g.count++;g.lat+=c[1];g.lon+=c[0];g.largest=Math.max(g.largest,Number(p.HAIL_SIZE)||0);
+  });
+  const ranked=[...grouped.values()].map(g=>({...g,lat:g.lat/g.count,lon:g.lon/g.count})).sort((a,b)=>b.count-a.count||b.largest-a.largest);
+  ranked.forEach((g,i)=>{
+   const popup='<b>'+safe(g.county)+', '+safe(g.state)+'</b><br>'+g.count+' reported hail location(s)<br>Largest reported: '+(g.largest?g.largest.toFixed(2)+'″':'Not specified')+'<br>Preliminary report concentration, not a radar hail footprint';
+   L.circle([g.lat,g.lon],{radius:Math.min(35000,9000+g.count*3500),color:'#f9bb41',weight:2,fillColor:'#f9bb41',fillOpacity:.12,interactive:true}).bindPopup(popup).addTo(hotspotLayer);
+  });
+  const shown=ranked.slice(0,8);
+  $('hotspotlist').innerHTML=shown.map((g,i)=>'<button type="button" data-hotspot="'+i+'" style="display:block;text-align:left;width:100%;border:1px solid #32516d;background:#163550;color:#fff;border-radius:7px;padding:10px;margin:7px 0;cursor:pointer"><strong>'+(i+1)+'. '+safe(g.county)+', '+safe(g.state)+'</strong><span style="display:block;color:#b6d5e8;font-size:12px">'+g.count+' reports · largest '+(g.largest?g.largest.toFixed(2)+'″':'unknown')+'</span></button>').join('')||'<p>No hail report clusters available from this feed.</p>';
+  $('hotspotlist').querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{const g=shown[Number(btn.dataset.hotspot)];if(g)map.setView([g.lat,g.lon],9)}));
+  $('recent').innerHTML=rows.slice().sort((a,b)=>(Number(b.properties?.UTC_DATETIME)||0)-(Number(a.properties?.UTC_DATETIME)||0)).slice(0,7).map(f=>{const p=f.properties||{};return '<div class="report"><strong>'+safe(p.LOCATION||'Hail report')+', '+safe(p.STATE||'')+'</strong>'+safe(p.HAIL_SIZE||'—')+'″ reported · '+safe(p.COUNTY||'')+'</div>'}).join('')||'No hail reports in this feed.';
+  msgs.push(rows.length+' hail reports loaded');
+ }else{$('hotspotlist').textContent='Hotspots unavailable while the hail report feed is offline.';$('count').textContent='Unavailable';$('largest').textContent='—';$('recent').textContent='Hail report feed temporarily unavailable.';msgs.push('Hail reports unavailable')}
+ if(results[1].status==='fulfilled'){
+  const fs=(results[1].value.features||[]);warnings.clearLayers();let mapped=0;
+  fs.forEach(f=>{if(!f.geometry)return;try{const poly=L.geoJSON(f,{style:{color:'#ff5474',weight:2,fillColor:'#ff5474',fillOpacity:.15}}).bindPopup('<b>'+safe(f.properties?.headline||'Severe Thunderstorm Warning')+'</b><br>'+safe(f.properties?.areaDesc||'')+'<br><a href="'+safe(f.properties?.['@id']||'https://www.weather.gov/')+'" target="_blank" rel="noopener">Official warning</a>');poly.addTo(warnings);mapped++}catch(e){}});
+  $('warncount').textContent=fs.length.toLocaleString();msgs.push(fs.length+' active severe thunderstorm warnings ('+mapped+' mapped)');
+ }else{$('warncount').textContent='Unavailable';msgs.push('Warnings unavailable')}
+ $('status').textContent=msgs.join(' · ')+' · Updated '+new Date().toLocaleTimeString();
+}
+$('refresh').onclick=load;load();
+})();
+</script></body></html>

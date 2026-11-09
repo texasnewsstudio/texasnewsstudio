@@ -1,0 +1,9 @@
+TNS CITY NEWS: PUBLISH WHEN YOU CHOOSE
+
+There is NO daily publishing requirement. Existing city articles remain dated and visible.
+
+To publish a new story: tell ChatGPT which Texas city, supply the story/topic, and upload the latest website ZIP. ChatGPT can research and write the verified article, add its HTML page, register it in tns-city-stories.json, update sitemap.xml, and return a new complete ZIP for Cloudflare Pages.
+
+Each JSON record uses city (e.g. marble-falls), cityName, title, date (YYYY-MM-DD), and url (local HTML filename). The optional on-demand list appears on the network page and relevant city page. It does not replace existing city reports.
+
+Weather/alerts continue refreshing independently. No external news-search links are needed. This static site does NOT have an online admin dashboard or automatic original-news writing.

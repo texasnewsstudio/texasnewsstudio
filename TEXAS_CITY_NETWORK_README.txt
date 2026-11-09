@@ -1,0 +1,1 @@
+Texas City News Network: 16 city pages. News menu links to city directory. Current weather uses Open-Meteo; active alerts use NWS. Latest news uses Google News search/RSS links, NOT embedded auto-populated headlines. No database or Worker required. Live external services require network access and may fail. Original pages otherwise preserved.

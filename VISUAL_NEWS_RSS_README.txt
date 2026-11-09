@@ -1,0 +1,4 @@
+VISUAL NEWS SHOWCASE
+Automatic: pulls recent headlines with publisher-provided images from public RSS feeds via rss2json. Refreshes every 10 minutes, rotates every 9 seconds. Only articles less than 48 hours old. A feed must contain a usable image to display.
+Manual override: edit visual-news-manual.json as a JSON array of {"title":"Headline","url":"https://article-link","image":"https://image-url","source":"Source","date":"2026-10-21T10:00:00-05:00"}. These appear first. Empty array means automatic only.
+Publisher images are not AI-generated and may be subject to copyright. This showcase credits sources and links to their articles. The feed conversion service is third-party and may be rate-limited or fail; the last good data is cached for up to 48 hours in a viewer browser. Image loading is not guaranteed. No OpenAI API key required.

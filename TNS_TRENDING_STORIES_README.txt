@@ -1,0 +1,1 @@
+Five original search-focused articles added November 7, 2026. These pages are included in the complete site archive, but homepage hero-carousel links have NOT been changed. Add the five article links to your carousel after editorial review. No new AI illustrations are included in this package.

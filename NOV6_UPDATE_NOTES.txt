@@ -1,0 +1,2 @@
+NOVEMBER 6, 2026 TNS UPDATE
+25 carousel headlines and 9 top stories updated, with 34 linked original summary articles. Old unrelated carousel photographs removed; article pages link to source reporting. Existing weather, navigation, and advertising rails retained. New article URLs added to sitemap.xml. Upload the contents of this ZIP to Cloudflare Pages. Review all articles before publishing; this is an editorial draft, not an independently fact-checked newsroom release.

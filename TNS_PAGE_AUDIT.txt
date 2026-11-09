@@ -1,0 +1,13 @@
+TEXAS NEWS STUDIO PAGE AUDIT — 20 OCTOBER 2026
+
+HOME: preserved exactly, including live player, Stay Informed and Support.
+WEATHER: preserved existing Weather Studio wrapper.
+WARNINGS: preserved National Warning Center and NWS alert script (live API needs deployment test).
+STORM OUTLOOKS: preserved SPC/NHC/NOAA resource cards.
+MARKETS: kept in menu; stripped duplicated homepage and RSS sections; retained TradingView quotes widget.
+ABOUT: kept in menu; stripped duplicated homepage and RSS sections; retained founder and organization content.
+SUPPORT: kept in menu; stripped duplicated homepage and RSS sections; retained donation/support content.
+ADVERTISE: preserved dedicated advertising page.
+NEWS / TEXAS NEWS / MILITARY-WORLD: removed from menus, as mostly RSS aggregators; original URLs retained as simple under-construction landing pages to avoid dead links.
+
+Notes: Static audit only; real-time external data, player embedding, and Cloudflare routing require live verification.

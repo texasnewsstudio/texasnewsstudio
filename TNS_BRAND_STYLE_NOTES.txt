@@ -1,0 +1,1 @@
+TNS Weather Center masthead and map headers now use white Arial Black-style type on deep navy, with red and blue accents matching the supplied TNS screenshot. Temperature cards open the temperature iframe source; radar cards open the radar iframe source. Weather data fetches remain unchanged. Live API functionality requires browser verification.

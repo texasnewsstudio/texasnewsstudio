@@ -1,0 +1,78 @@
+/* Texas News Studio — light editorial redesign. Keeps all feed/player IDs intact. */
+:root{--bg:#f3f5f8;--panel:#fff;--panel2:#eef3f9;--line:#dbe2ec;--text:#172438;--muted:#5c6a7c;--red:#c72035;--gold:#b78124;--blue:#164c89}
+body{background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit}.wrap{max-width:1380px}
+.mast{background:#0c1422!important;border-bottom:0;box-shadow:none}
+.mast:before,.mast:after{display:none}
+.mast-inner{min-height:95px}.brand h1{color:#fff;text-shadow:none;font-size:clamp(27px,3vw,43px);letter-spacing:-1.4px}.brandmark{border-radius:3px;clip-path:none;background:linear-gradient(155deg,#184b87 0 53%,#fff 53% 60%,#c62038 60%);font-weight:900;box-shadow:0 0 0 2px #ffffff30}
+.tag{color:#d4dfec}.mast-note{color:#d6deeb}
+nav{background:#134b8a;border-bottom:4px solid #c72035;box-shadow:0 2px 8px #112f5125}
+.navrow a{color:#fff;font-size:12px;letter-spacing:.45px;padding:15px 14px}.navrow a:first-child{background:#0b3769}.navrow a:hover{background:#0a3566}
+.ticker{border:1px solid #e5d5d8;background:#fff;border-radius:3px;box-shadow:0 1px 5px #122d4610;margin:17px 0}
+.ticker strong{background:#c72035;color:#fff}.ticker span{color:#19385d;font-weight:700}
+.panel{background:#fff;border:1px solid #dce3eb;border-radius:4px;box-shadow:0 2px 9px #152e4810}
+.panel-title,.section-head{background:#fff;color:#173e70;border-bottom:2px solid #dce5ef;letter-spacing:0}
+.section-head{border-left:0;padding:14px 17px;position:relative}
+.section-head:after{content:"";position:absolute;bottom:-2px;left:17px;width:72px;height:3px;background:#c72035}
+.section-head h2{font-size:17px!important;font-weight:900;letter-spacing:.15px}
+.section-head a{color:#14518f;font-weight:700}
+.panel-title{font-size:14px}
+.live{color:#fff}.intro{min-height:320px;background:linear-gradient(95deg,rgba(6,24,48,.94),rgba(6,30,63,.75)),url('assets/capitol.jpg') center/cover!important;color:#fff}
+.intro:before,.intro:after{display:none}.intro .eyebrow{color:#f0c45b}.intro p{color:#e6ecf4}.intro h2{font-size:clamp(30px,3vw,43px)}
+.button{background:#164d87;color:#fff}.button.red{background:#c72035}.button.gold{color:#172438}
+.video-area{background:#fff}.video-area .panel-title{color:#123d72}.video-placeholder{background:#0a1b32;color:#fff}.player-switch{background:#eef3f9;color:#194676;border-color:#c8d7e8}.player-switch[aria-pressed=true]{background:#c72035;color:#fff}.player-status{color:#5d6b7d}
+.support{background:#fff}.support p,.micro,.feed-note{color:#5b697b}
+.grid-main{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
+.grid-main>#news,.grid-main>#weather{align-self:start}
+.grid-main>#news .feed-list{flex:none;min-height:200px}
+.grid-main>#weather{align-self:start}
+.weather-live-frame{flex:none!important;min-height:0!important;background:#102a42}
+.weather-caption{color:#4b647e;background:#eef4fa;padding:9px 14px;font-size:12px}
+.tabs{background:#f8fafc;border-bottom:1px solid #e3e8ef}
+.tab{background:#fff;color:#164778;border:1px solid #d4dfeb;font-weight:700}.tab[aria-selected=true]{background:#174e89;border-color:#174e89;color:#fff}
+.story{border-bottom:1px solid #e4e9ef}.story a{color:#124d88;font-size:15px;line-height:1.4}.story a:hover{color:#b51e34;text-decoration:underline}.story small{color:#6a7888;font-size:12px}
+.news-panel .story a{font-size:15px}.news-panels{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.news-panels>.news-panel{align-self:start}.news-panels>.news-panel .feed-list{flex:none;min-height:0}
+.finance-layout{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.finance-layout>.market-board{background:#102137;color:#fff}.market-board-label,.market-disclaimer{color:#d9e4f1}.finance-headlines{background:#fff}.market-news-title{color:#184c84}
+.content p{color:#526273}.sponsors{margin-top:20px}.sponsor,.sponsor:nth-child(2),.sponsor:nth-child(3){background:#f5f8fc;border:1px dashed #a9bed5;color:#173e70;min-height:112px}.sponsor small{color:#65768a}
+.footer{background:#0d1c30;color:#e1eaf5;border-top:4px solid #c72035}.notice{background:#fff9e9;color:#755b2e;border-left-color:#d8a744}
+@media(max-width:1050px){.hero{grid-template-columns:1fr 1.2fr}.support{grid-column:1/-1}.support-links{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:850px){.grid-main{grid-template-columns:1fr}.finance-layout{grid-template-columns:1fr}.finance-layout>.market-board{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:760px){.hero,.news-panels,.below{grid-template-columns:1fr}.support-links{grid-template-columns:1fr 1fr}.intro{min-height:250px}.mast-inner{min-height:85px}.mast-note{display:none}}
+@media(max-width:450px){.support-links,.sponsor-grid{grid-template-columns:1fr}.navrow a{padding:10px 8px}}
+
+/* Contrast-only correction: the three dark-blue category panels. */
+.news-panels > .news-panel { color:#f7fbff; }
+.news-panels > .news-panel .story a,
+.news-panels > .news-panel .story a:visited { color:#ffffff; }
+.news-panels > .news-panel .story a:hover,
+.news-panels > .news-panel .story a:focus-visible { color:#bfe5ff; text-decoration:underline; }
+.news-panels > .news-panel .story small,
+.news-panels > .news-panel .story .story-date,
+.news-panels > .news-panel .story .story-source,
+.news-panels > .news-panel .feed-note { color:#d6e5f5; }
+.news-panels > .news-panel .story { border-bottom-color:rgba(220,237,255,.23); }
+.news-panels > .news-panel .feed-note a { color:#c3e6ff; }
+/* Finance headlines are on white, so keep their dark-blue text. */
+.news-panels > .news-panel .finance-headlines .story a,
+.news-panels > .news-panel .finance-headlines .story a:visited { color:#124d88; }
+.news-panels > .news-panel .finance-headlines .story a:hover { color:#b51e34; }
+.news-panels > .news-panel .finance-headlines .story small,
+.news-panels > .news-panel .finance-headlines .story .story-date,
+.news-panels > .news-panel .finance-headlines .story .story-source { color:#526578; }
+.news-panels > .news-panel .finance-headlines .story { border-bottom-color:#e4e9ef; }
+
+/* Markets & Finance only: accessible light-on-dark colors, including quotes and headlines. */
+.news-panels > .news-panel .finance-headlines {background:#102137;color:#f7fbff;}
+.news-panels > .news-panel .finance-headlines .market-news-title {color:#f7fbff;}
+.news-panels > .news-panel .finance-headlines .story a,
+.news-panels > .news-panel .finance-headlines .story a:visited {color:#fff;}
+.news-panels > .news-panel .finance-headlines .story a:hover,
+.news-panels > .news-panel .finance-headlines .story a:focus-visible {color:#bfe5ff;}
+.news-panels > .news-panel .finance-headlines .story small,
+.news-panels > .news-panel .finance-headlines .story .story-date,
+.news-panels > .news-panel .finance-headlines .story .story-source {color:#d6e5f5;}
+.news-panels > .news-panel .finance-headlines .story {border-bottom-color:rgba(220,237,255,.23);}
+.finance-layout .market-board-label, .finance-layout .market-board-label small {color:#eaf3ff;}
+.finance-layout .market-disclaimer {color:#c9daec;}

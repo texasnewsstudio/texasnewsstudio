@@ -1,0 +1,822 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TNS National Temperature Map</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:#102c50;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+#map{height:100%;width:100%;background:#173f72}
+.top{position:absolute;z-index:800;top:12px;right:13px;background:#f4f7fcf5;box-shadow:0 3px 14px #0008;color:#273f5c;display:flex;align-items:center;gap:11px;padding:8px 13px;border-radius:2px;pointer-events:none}
+.top strong{font-size:clamp(15px,2vw,27px);letter-spacing:.4px}.top small{font-size:10px;font-weight:800;letter-spacing:1px;color:#496d99}
+.temp-label{border:0;background:transparent}
+.temp-label .readout{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 1px 2px #112e4c77);white-space:nowrap;transform:translate(-50%,-50%)}
+.temp-label .number{background:#e6edf5e8;color:#315c86;font-size:clamp(17px,2.2vw,31px);font-weight:900;line-height:1;padding:3px 6px 1px;min-width:44px;text-align:center}
+.temp-label .name{background:#dce8f6e9;color:#315c86;font-size:clamp(8px,1.05vw,12px);font-weight:900;line-height:1.1;padding:3px 5px;text-transform:uppercase;text-align:center;letter-spacing:.1px}
+.state-label{background:transparent;border:0;color:#ffffffd0;font-size:12px;font-weight:900;text-shadow:0 1px 4px #000,0 0 4px #000}
+/* Side-mounted map legends: no floating legends along the map bottom. */
+.info,.overlay-status{position:absolute;z-index:850;top:50%;transform:translateY(-50%);
+ width:148px;max-width:148px;bottom:auto;min-height:160px;
+ background:#071c33ed;color:#eef7ff;border:1px solid #78a7ca88;
+ padding:12px 10px;pointer-events:none;box-shadow:0 3px 14px #0007;
+ font-family:Arial,Helvetica,sans-serif;line-height:1.4}
+.info{left:8px;font-size:11px}
+.overlay-status{right:8px;font-size:10px;font-weight:700;letter-spacing:.1px}
+.info b{font-size:12px;display:block;line-height:1.25}
+.info .key{height:12px;margin:11px 0 5px;background:linear-gradient(90deg,#204ac4,#1e9dba,#40ad66,#d5d633,#f39b2d,#d02c27);border:1px solid #ffffff66}
+.info .ticks{display:flex;justify-content:space-between;font-size:9px}
+.side-title{display:block;font-size:12px;font-weight:900;color:#fff;letter-spacing:.4px;margin-bottom:8px;border-bottom:1px solid #6d93b866;padding-bottom:6px}
+.side-note{font-size:9px;color:#c3d9ea;margin-top:10px;line-height:1.3}
+.alert-key{display:flex;align-items:center;gap:6px;margin:7px 0;font-size:10px;line-height:1.15}
+.alert-swatch{display:inline-block;flex:0 0 11px;height:11px;border-radius:2px}
+.alert-live{border-top:1px solid #6d93b866;padding-top:8px;margin-top:10px;color:#8fe8b2;font-size:9px;line-height:1.4}
+.leaflet-control-attribution{font-size:9px!important}
+
+.embed .info,.embed .overlay-status{width:133px;max-width:133px;padding:9px 8px}
+.embed .info{font-size:10px}.embed .info b{font-size:10px}
+.embed .alert-key{font-size:9px;margin:6px 0}
+.embed .side-title{font-size:10px}
+.embed .temp-label .number{font-size:clamp(15px,2vw,25px)}
+.embed .temp-label .name{font-size:clamp(7px,.85vw,11px)}
+@media(max-width:650px){.info,.overlay-status{width:95px;max-width:95px;padding:7px 5px}.side-title{font-size:9px}.alert-key{font-size:8px;gap:3px}.side-note{display:none}.temp-label .number{font-size:16px}.temp-label .name{font-size:8px}}
+
+/* Full-height legends run along the two outside margins of the colored CONUS field. */
+.info,.overlay-status{
+ top:6px!important;bottom:6px!important;height:auto!important;min-height:0!important;
+ transform:none!important;display:flex!important;flex-direction:column!important;
+ justify-content:space-between!important;width:216px!important;max-width:216px!important;
+ padding:15px 12px!important;border-radius:3px;overflow:hidden!important;
+}
+.info{left:7px!important;font-size:14px!important}
+.overlay-status{right:7px!important;font-size:13px!important;font-weight:700}
+.side-title{font-size:17px!important;line-height:1.25!important;margin-bottom:13px!important;padding-bottom:12px!important}
+.info b{font-size:16px!important;line-height:1.45!important}
+.info .key{height:23px!important;margin:12px 0 7px!important;border-radius:2px}
+.info .ticks{font-size:12px!important;font-weight:800}
+.side-note{font-size:12px!important;line-height:1.45!important;margin-top:12px!important}
+.alert-key{font-size:13px!important;line-height:1.3!important;margin:0!important;min-height:39px!important;gap:9px!important}
+.alert-swatch{flex-basis:17px!important;height:17px!important}
+.alert-live{font-size:12px!important;line-height:1.45!important;margin-top:12px!important;padding-top:12px!important}
+.embed .info,.embed .overlay-status{width:216px!important;max-width:216px!important;padding:12px 10px!important}
+.embed .info{font-size:13px!important}.embed .info b{font-size:14px!important}
+.embed .side-title{font-size:15px!important}
+.embed .alert-key{font-size:12px!important;min-height:33px!important}
+.embed .side-note{font-size:11px!important}
+@media(max-width:760px){
+ .info,.overlay-status,.embed .info,.embed .overlay-status{width:132px!important;max-width:132px!important;padding:7px 6px!important}
+ .side-title,.embed .side-title{font-size:11px!important;margin-bottom:4px!important;padding-bottom:5px!important}
+ .info b,.embed .info b{font-size:10px!important}
+ .alert-key,.embed .alert-key{font-size:9px!important;min-height:25px!important;gap:4px!important}
+ .alert-swatch{flex-basis:10px!important;height:10px!important}
+ .side-note,.embed .side-note{font-size:9px!important}
+ .alert-live{font-size:9px!important}
+ .info .ticks{font-size:9px!important}
+}
+
+.layer-menu{position:absolute;z-index:1100;top:8px;left:50%;transform:translateX(-50%);background:#071c33f2;color:white;border:1px solid #75a3ca;border-radius:5px;box-shadow:0 3px 15px #0008;font-size:12px;max-width:calc(100% - 310px)}
+.layer-menu summary{cursor:pointer;list-style:none;padding:10px 18px;font-weight:900;white-space:nowrap;text-align:center}
+.layer-menu summary::-webkit-details-marker{display:none}
+.layer-options{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:8px;padding:12px 14px;border-top:1px solid #537da0}
+.layer-options label{display:flex;gap:8px;align-items:center;cursor:pointer;white-space:nowrap}
+.layer-options input{accent-color:#56d5ff;width:16px;height:16px}
+.layer-help{grid-column:1/-1;font-size:10px;color:#c7e3f5;line-height:1.3}
+@media(max-width:850px){.layer-menu{left:50%;max-width:calc(100% - 30px)}.layer-options{grid-template-columns:repeat(2,minmax(100px,1fr));font-size:10px}}
+.model-controls{display:none;grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-top:1px solid #5a829b;padding-top:10px}
+.model-controls.active{display:grid}
+.model-controls label{display:flex;flex-direction:column;align-items:stretch;gap:3px;font-size:10px}
+.model-controls select{background:#0a2944;color:white;border:1px solid #5b9bc1;border-radius:3px;padding:6px;min-width:0;max-width:100%;font-size:11px}
+.model-status{grid-column:1/-1;font-size:10px;color:#b8d9f1}
+.spc-menu-legend{grid-column:1/-1;border-top:1px solid #6488a0;padding:8px 2px 4px;font-size:10px}
+.spc-menu-legend[hidden]{display:none}
+.spc-legend-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.spc-legend-grid span{display:flex;align-items:center;gap:5px}
+.spc-legend-grid i{display:inline-block;width:12px;height:12px;flex:0 0 12px;border:1px solid #ffffff66}
+#spc-status{margin-top:7px;color:#b8d9f1;font-size:10px}
+.leaflet-control-zoom{display:none!important}
+.info .side-title,.embed .info .side-title{font-size:14px!important;letter-spacing:0!important;overflow-wrap:normal!important;white-space:nowrap!important}
+@media(max-width:650px){.info .side-title,.embed .info .side-title{font-size:10px!important}}
+/* Invisible at rest; hover/focus reveals the layer menu without changing map dimensions. */
+.layer-menu{background:transparent;border-color:transparent;box-shadow:none}
+.layer-menu:not([open]) summary{opacity:0;min-width:185px;min-height:38px}
+.layer-menu:hover,.layer-menu:focus-within,.layer-menu[open]{background:#071c33f2;border-color:#75a3ca;box-shadow:0 3px 15px #0008}
+.layer-menu:hover summary,.layer-menu:focus-within summary,.layer-menu[open] summary{opacity:1}
+/* Compact left-side temperature legend: colors and labels only. */
+.info,.embed .info{top:50%!important;bottom:auto!important;height:auto!important;min-height:0!important;transform:translateY(-50%)!important;width:164px!important;justify-content:center!important;padding:12px 10px!important}
+.info .key{margin:0 0 7px!important}
+
+/* Weather-news left rail; map and right rail unchanged */
+.info.tns-news-rail,.embed .info.tns-news-rail{top:6px!important;bottom:6px!important;left:7px!important;transform:none!important;height:auto!important;min-height:0!important;width:216px!important;max-width:216px!important;padding:10px 8px!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;pointer-events:auto!important;overflow:hidden!important;background:#071c33f2!important}
+.tns-news-head{display:block;font-size:12px;line-height:1.25;color:white;border-bottom:2px solid #cb3044;padding-bottom:10px;margin-bottom:8px}
+.tns-news-scroll{flex:1;min-height:0;overflow:hidden}.tns-news-item{display:block;text-decoration:none;color:#fff!important;padding:11px 2px;border-bottom:1px solid #456681;overflow-wrap:anywhere}.tns-news-item:hover,.tns-news-item:focus-visible{background:#1a405f}.tns-news-type{display:block;color:#9bcff2;font-size:9px;font-weight:800;margin-bottom:5px}.tns-news-title{display:block;font-size:12px;font-weight:800;line-height:1.3}.tns-news-date{display:block;font-size:9px;color:#abc5d8;margin-top:6px}.tns-news-foot{display:flex;align-items:center;justify-content:space-between;gap:3px;border-top:1px solid #456681;padding-top:7px;color:#abc5d8;font-size:9px}.tns-news-foot button{background:#194363;border:1px solid #6388a1;border-radius:3px;color:white;font-size:10px;padding:4px;cursor:pointer}
+@media(max-width:760px){.info.tns-news-rail,.embed .info.tns-news-rail{width:132px!important;max-width:132px!important;padding:7px 5px!important}.tns-news-head{font-size:10px}.tns-news-title{font-size:10px}}
+
+/* TNS editorial alert center: right-side replacement only; independent of map tiles. */
+.overlay-status.tns-alert-center{justify-content:flex-start!important;gap:0!important;padding:0!important;background:#071629f5!important;border:1px solid #7186a7!important;color:#fff!important;pointer-events:auto!important;width:218px!important;max-width:218px!important;z-index:870!important;overflow:hidden!important}
+.tns-alert-banner{display:flex;align-items:center;gap:6px;padding:11px 9px;background:linear-gradient(105deg,#a7191b,#d63316);font-size:12px;font-weight:900;letter-spacing:.15px;line-height:1.15;flex-shrink:0}
+.tns-live-chip{margin-left:auto;font-size:9px;background:#fff;color:#9c1116;border-radius:3px;padding:3px 4px;letter-spacing:.5px}
+.tns-alert-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff;animation:tns-live-pulse 2s infinite;flex-shrink:0}
+@keyframes tns-live-pulse{50%{opacity:.25}}
+.tns-alert-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:6px 5px;background:#14243a;flex-shrink:0}
+.tns-count{text-align:center;min-width:0;border-radius:3px;padding:6px 2px 5px;background:#25344a;border-top:3px solid #fff}
+.tns-count-red{border-color:#f22}.tns-count-orange{border-color:#ff9d00}.tns-count-gold{border-color:#eacb26}
+.tns-count>span{display:block;font-size:26px;font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums}
+.tns-count small{display:block;font-size:7px;font-weight:900;line-height:1.3;letter-spacing:.1px;margin-top:4px;color:#dce8f5}
+.tns-alert-strap{display:flex;justify-content:space-between;gap:5px;padding:8px 7px;background:#edf2f9;color:#132b49;font-weight:900;font-size:9px;line-height:1.3;flex-shrink:0}
+#tns-alert-update{font-size:8px;color:#476078;white-space:nowrap}
+.tns-alert-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7796b7 #0d1f35}
+.tns-alert-item{display:block;text-decoration:none!important;color:#fff!important;padding:10px 9px;border-bottom:2px solid #091626;background:#22334b;transition:background .2s}
+.tns-alert-item:hover,.tns-alert-item:focus-visible{background:#385574!important;outline:2px solid #fff;outline-offset:-2px}
+.tns-alert-item.tns-type-tornado{background:#9e121b}.tns-alert-item.tns-type-pds{background:#8c0813;animation:tns-pds-panel 1.5s infinite}
+.tns-alert-item.tns-type-severe{background:#a94a09}.tns-alert-item.tns-type-watch{background:#98690a}
+.tns-alert-item.tns-type-flood{background:#126379}.tns-alert-item.tns-type-winter{background:#3d568f}.tns-alert-item.tns-type-other{background:#2b425b}
+@keyframes tns-pds-panel{50%{background:#c42025}}
+.tns-alert-event{font-weight:900;font-size:13px;line-height:1.2;letter-spacing:.25px}
+.tns-alert-area{font-size:11px;font-weight:700;line-height:1.3;margin-top:5px}
+.tns-alert-expiry{font-size:10px;margin-top:5px;color:#f2f4ff}
+.tns-alert-pds-flag{font-size:10px;font-weight:900;background:#fff;color:#a00000;padding:2px 4px;margin-bottom:5px;display:inline-block}
+.tns-alert-empty{font-size:11px;padding:18px 10px;line-height:1.5;color:#d4e1f1}
+.tns-alert-pager{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:5px 8px;background:#0e2846;flex-shrink:0;font-size:9px;font-weight:800}
+.tns-alert-pager button{background:#23466b;border:1px solid #7994b0;border-radius:3px;color:white;cursor:pointer;padding:3px 8px}
+.tns-alert-pager button:disabled{opacity:.3;cursor:default}
+.tns-alert-bottom{padding:6px 8px;background:#071729;flex-shrink:0}
+.tns-alert-bottom .alert-live{margin:0;padding:2px 0;font-size:9px;line-height:1.3;border:0}
+.tns-alert-bottom .side-note{font-size:9px;margin:3px 0}
+.tns-alert-source{font-size:8px;color:#9ab5d1;line-height:1.3;margin-top:4px}
+.embed .overlay-status.tns-alert-center{width:196px!important;max-width:196px!important}
+.embed .tns-alert-count>span{font-size:22px}
+@media(max-width:650px){.overlay-status.tns-alert-center,.embed .overlay-status.tns-alert-center{width:132px!important;max-width:132px!important}.tns-alert-banner{font-size:9px;padding:7px 4px}.tns-alert-counts{gap:1px;padding:3px}.tns-count{padding:3px 0}.tns-count>span{font-size:17px}.tns-count small{font-size:6px}.tns-alert-strap{font-size:7px;padding:5px 3px}.tns-alert-item{padding:6px 4px}.tns-alert-event{font-size:10px}.tns-alert-area{font-size:9px}.tns-alert-expiry{font-size:8px}.tns-alert-bottom{padding:4px}.tns-alert-source{font-size:7px}.tns-alert-pager{padding:3px}.tns-alert-pager button{padding:2px 4px}}
+@media(prefers-reduced-motion:reduce){.tns-alert-dot,.tns-alert-item.tns-type-pds{animation:none!important}}
+</style><style id="tns-tornado-polygon-style">
+/* Actual NWS warning geometry; visual pulse does not indicate a new issuance. */
+@keyframes tns-tornado-pulse {0%,100%{stroke-opacity:1;fill-opacity:.34;stroke-width:6px}50%{stroke-opacity:.28;fill-opacity:.07;stroke-width:3px}}
+.leaflet-overlay-pane path.tns-tornado-blink{stroke:#ff0000!important;fill:#ff0000!important;animation:tns-tornado-pulse 1.15s ease-in-out infinite;stroke-linejoin:round}
+.leaflet-overlay-pane path.tns-tornado-blink.tns-pds{stroke-width:7px!important;stroke-dasharray:12 5;animation-duration:.7s}
+@media(prefers-reduced-motion:reduce){.leaflet-overlay-pane path.tns-tornado-blink{animation:none!important;stroke-opacity:1!important;fill-opacity:.22!important}}
+</style>
+</head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
+<div class="layer-options">
+<label><input type="checkbox" data-layer="temperature" checked>Temperature colors</label>
+<label><input type="checkbox" data-layer="cityTemps" checked>City temperatures</label>
+<label><input type="checkbox" data-layer="states" checked>State outlines</label>
+<label><input type="checkbox" data-layer="counties">County outlines</label>
+<label><input type="checkbox" data-layer="radar" checked>Live radar</label>
+<label><input type="checkbox" data-layer="alerts" checked>NWS alerts</label>
+<label><input type="checkbox" data-layer="wpc" checked>WPC forecast</label>
+<label><input type="checkbox" data-layer="roads" checked>Roads / interstates</label>
+<label><input type="checkbox" data-layer="places">City / place names</label>
+<label><input type="checkbox" data-layer="spc" id="spc-enable" checked>SPC Day 1 outlook</label>
+<div id="spc-menu-legend" class="spc-menu-legend" hidden>
+<div class="spc-legend-grid"><span><i style="background:#c1e9c1"></i>Thunder</span><span><i style="background:#66a366"></i>Marginal</span><span><i style="background:#ffe066"></i>Slight</span><span><i style="background:#ffa366"></i>Enhanced</span><span><i style="background:#e06666"></i>Moderate</span><span><i style="background:#ee99ee"></i>High</span></div>
+<div id="spc-status">SPC layer off</div>
+</div>
+<label><input type="checkbox" data-layer="models" id="model-enable">Weather models</label>
+<div class="model-controls" id="model-controls">
+<label>Model <select id="model-type"><option value="hrrr_conus">HRRR</option><option value="gfs_global">GFS</option><option value="nam_conus">NAM</option></select></label>
+<label>Field <select id="model-field"><option value="temperature_2m">Temperature</option><option value="precipitation">Precipitation</option><option value="wind_speed_10m">Wind speed</option><option value="pressure_msl">Sea-level pressure</option></select></label>
+<label>Forecast <select id="model-hour"><option value="0">Now</option><option value="3">+3h</option><option value="6" selected>+6h</option><option value="12">+12h</option><option value="18">+18h</option><option value="24">+24h</option><option value="36">+36h</option><option value="48">+48h</option></select></label>
+<div class="model-status" id="model-status">Model layer off · loads on demand</div>
+</div>
+<div class="layer-help">Turn on only what you need. Heavy layers load on demand. Roads and place names show when zoomed in.</div>
+</div></details>
+<aside class="info tns-news-rail" aria-label="Rotating national weather news"><strong class="tns-news-head">TNS WEATHER NEWS</strong><div class="tns-news-scroll" id="tns-news-scroll"><div id="tns-news-items">Loading weather headlines…</div></div><div class="tns-news-foot"><span id="tns-news-source">LAST 24 HOURS</span><button id="tns-news-toggle" type="button">Pause</button></div></aside>
+<aside class="overlay-status tns-alert-center" aria-label="Live national NWS alert center">
+  <div class="tns-alert-banner"><span class="tns-alert-dot"></span> TNS WEATHER ALERT CENTER <span class="tns-live-chip">LIVE</span></div>
+  <div class="tns-alert-counts" aria-label="Active NWS warning and watch totals">
+    <div class="tns-count tns-count-red"><span id="tns-count-tornado">—</span><small>TORNADO<br>WARNINGS</small></div>
+    <div class="tns-count tns-count-orange"><span id="tns-count-severe">—</span><small>SEVERE T-STORM<br>WARNINGS</small></div>
+    <div class="tns-count tns-count-gold"><span id="tns-count-watches">—</span><small>SEVERE<br>WATCHES</small></div>
+  </div>
+  <div class="tns-alert-strap"><span>ACTIVE WATCHES · WARNINGS · ADVISORIES</span><span id="tns-alert-update">CONNECTING</span></div>
+  <div class="tns-alert-list" id="tns-alert-list" aria-live="off"><div class="tns-alert-empty">Connecting to official National Weather Service alerts…</div></div>
+  <div class="tns-alert-pager"><button id="tns-alert-prev" type="button" aria-label="Previous alerts">◀</button><span id="tns-alert-page">NWS LIVE FEED</span><button id="tns-alert-next" type="button" aria-label="Next alerts">▶</button></div>
+  <div class="tns-alert-bottom"><div class="alert-live" id="tns-overlay-status" hidden aria-hidden="true" style="display:none!important"></div><div id="wpc-status" class="side-note" hidden aria-hidden="true" style="display:none!important"></div><div class="tns-alert-source">Official NWS alerts · refresh every 60 seconds · times local to viewer</div></div>
+</aside>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const embedded=new URLSearchParams(location.search).has('embed');
+if(embedded)document.body.classList.add('embed');
+const map=L.map('map',{zoomControl:false,scrollWheelZoom:true,dragging:true,doubleClickZoom:true,touchZoom:true,attributionControl:true,preferCanvas:true,zoomSnap:0.1,zoomDelta:0.5});
+const usaBounds=L.latLngBounds([25.0,-124.8],[49.0,-66.7]);
+// Homepage preview uses a fixed close-up zoom; fitBounds alone leaves huge margins
+// because the nationwide aspect ratio differs from the wide homepage panel.
+map.setView([38.3,-96.3],embedded?4.5:4.3,{animate:false});
+map.whenReady(()=>{map.invalidateSize(false);map.setView([38.3,-96.3],embedded?4.5:4.3,{animate:false});});
+// Focus on the lower 48; allow visitors to zoom and pan on the full page.
+if(!embedded){map.setMaxBounds(L.latLngBounds([23,-128],[51,-63]));}
+map.setMinZoom(embedded?3:3);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Esri World Imagery'}).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,opacity:.28,attribution:'Esri Terrain'}).addTo(map);
+map.createPane('temperatureRaster');map.getPane('temperatureRaster').style.zIndex=350;map.getPane('temperatureRaster').style.pointerEvents='none';
+// Live radar below warning polygons; county lines above the color field.
+for(const [name,z] of [['radarPane',365],['countyPane',390],['alertPane',550],['cityPane',460]]){
+ map.createPane(name);map.getPane(name).style.zIndex=z;map.getPane(name).style.pointerEvents=name==='alertPane'?'auto':'none';
+}
+
+// WPC Day-1 national forecast: fronts, pressure systems and significant weather.
+// NOAA ArcGIS export supplies transparent, georeferenced imagery for the exact
+// Leaflet viewport; it stays aligned when the map zooms or pans.
+map.createPane('wpcPane');map.getPane('wpcPane').style.zIndex=410;
+map.getPane('wpcPane').style.pointerEvents='none';
+map.createPane('roadsPane');map.getPane('roadsPane').style.zIndex=405;
+map.getPane('roadsPane').style.pointerEvents='none';
+map.createPane('placePane');map.getPane('placePane').style.zIndex=440;
+map.getPane('placePane').style.pointerEvents='none';
+const transportation=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}',{
+ pane:'roadsPane',maxZoom:18,opacity:.94,attribution:'Esri road and interstate network'
+});
+const placeNames=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{
+ pane:'placePane',maxZoom:18,opacity:.95,attribution:'Esri city and place labels'
+});
+const layerEnabled={spc:true,models:false,temperature:true,cityTemps:true,states:true,counties:false,radar:true,alerts:true,wpc:true,roads:true,places:false};
+function updateRoads(){
+ const detailed=map.getZoom()>=6;
+ for(const [key,layer] of [['roads',transportation],['places',placeNames]]){
+  if(detailed&&layerEnabled[key]&&!map.hasLayer(layer))layer.addTo(map);
+  if((!detailed||!layerEnabled[key])&&map.hasLayer(layer))map.removeLayer(layer);
+ }
+}
+updateRoads();map.on('zoomend',updateRoads);
+// Stable geographic WPC forecast image: one fixed extent, not a new image
+// for every pan/zoom. Leaflet scales the same overlay in geographic position.
+const wpcExtent=L.latLngBounds([21.5,-130],[52.5,-61]);
+const wpcBase='https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/natl_fcst_wx_chart/MapServer/export';
+let wpcImage=null;
+function updateWPC(){
+ const params=new URLSearchParams({
+  bbox:'-130,21.5,-61,52.5',bboxSR:'4326',imageSR:'4326',
+  size:'1600,850',format:'png32',transparent:'true',
+  layers:'show:1,2,3,7,8',f:'image',dpi:'110',
+  _refresh:String(Math.floor(Date.now()/600000))
+ });
+ if(!layerEnabled.wpc)return;
+ const next=L.imageOverlay(wpcBase+'?'+params.toString(),wpcExtent,{
+  pane:'wpcPane',opacity:.9,interactive:false
+ });
+ next.once('load',()=>{
+  if(!layerEnabled.wpc){map.removeLayer(next);return;}
+  if(wpcImage)map.removeLayer(wpcImage);
+  wpcImage=next;
+  const status=document.getElementById('wpc-status');
+  if(status)status.textContent='WPC DAY-1 FORECAST · FRONTS / PRESSURE / WEATHER';
+ });
+ next.once('error',()=>{
+  map.removeLayer(next);
+  const status=document.getElementById('wpc-status');
+  if(status&&!wpcImage)status.textContent='WPC forecast overlay unavailable';
+ });
+ next.addTo(map);
+}
+setInterval(()=>{if(layerEnabled.wpc)updateWPC()},600000);
+// County outlines remain visible; slow click-to-look-up county API removed.
+const radar=L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi?',{
+ layers:'nexrad-n0q-900913',format:'image/png',transparent:true,version:'1.1.1',
+ opacity:.72,pane:'radarPane',attribution:'Iowa Environmental Mesonet / NEXRAD'
+});
+// Iowa Mesonet transparent national county-boundary tiles, no API key.
+const counties=L.tileLayer('https://mesonet.agron.iastate.edu/c/tile.py/1.0.0/uscounties/{z}/{x}/{y}.png',{
+ maxZoom:12,opacity:.68,pane:'countyPane',attribution:'Iowa Environmental Mesonet county boundaries'
+});
+// Official NWS GeoJSON. Alert polygons are only drawn when the NWS provides geometry.
+// PDS is detected from NWS damage-threat metadata or explicit warning text, never inferred.
+const alertSvgRenderer=L.svg({pane:'alertPane'});
+const alertLayer=L.geoJSON(null,{
+ pane:'alertPane',renderer:alertSvgRenderer,interactive:true,
+ style:function(f){
+  const e=String(f.properties?.event||'').toLowerCase(),p=f.properties||{};
+  const pds=isPDS(p),tor=e==='tornado warning',watch=e.includes('watch');
+  const color=tor?'#ff0000':pds?'#ff0000':e==='tornado watch'?'#a22fe6':e==='severe thunderstorm warning'?'#ff9c00':e==='severe thunderstorm watch'?'#e9c900':e.includes('flash flood')?'#00d9ed':e.includes('flood')?'#21b6ee':watch?'#c782ff':'#ff8e36';
+  return {color,weight:pds?6:tor?5:watch?2.3:3,opacity:1,fillColor:color,fillOpacity:tor?.24:watch?.09:.16,className:tor?'tns-tornado-blink'+(pds?' tns-pds':''):'tns-alert-outline'};
+ },
+ onEachFeature:function(f,layer){
+  const p=f.properties||{};const title=String(p.headline||p.event||'NWS Alert');
+  const issued=p.sent?new Date(p.sent).toLocaleString():'';
+  const href=/^https:\/\//.test(p['@id']||'')?p['@id']:(/^https:\/\//.test(p.id||'')?p.id:'https://www.weather.gov/');
+  const div=document.createElement('div');
+  const strong=document.createElement('strong');strong.textContent=(isPDS(p)?'PDS • ':'')+title;div.appendChild(strong);
+  const note=document.createElement('div');note.textContent=(p.areaDesc||'')+(issued?' • Issued '+issued:'');div.appendChild(note);
+  const link=document.createElement('a');link.href=href;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Official NWS alert';div.appendChild(link);
+  layer.bindPopup(div,{maxWidth:340});
+ }
+});
+function isPDS(p){
+ const params=p.parameters||{};
+ const dmg=[...(params.tornadoDamageThreat||[]),...(params.thunderstormDamageThreat||[])].join(' ').toUpperCase();
+ const prose=[p.headline,p.description].filter(Boolean).join(' ').toUpperCase();
+ return /CONSIDERABLE|CATASTROPHIC/.test(dmg)&&/TORNADO/.test(String(p.event||'').toUpperCase()) || /PARTICULARLY DANGEROUS SITUATION|\bPDS TORNADO WARNING\b/.test(prose);
+}
+const zoneCache=new Map();
+let lastAlertsOK=false, lastFocusId='',autoFocusEnabled=true, userNavigated=false;
+// Stop repeating zoom on routine refresh; only new critical warning IDs can trigger it.
+map.on('dragstart zoomstart',e=>{if(e.originalEvent)userNavigated=true;});
+const focusToggle=document.createElement('button');
+focusToggle.type='button';focusToggle.textContent='Auto-focus tornado / PDS: ON';
+focusToggle.setAttribute('aria-pressed','true');
+focusToggle.style.cssText='display:block;margin:7px 0;padding:7px 10px;border:1px solid #a8c7ee;border-radius:5px;background:#f3f8ff;color:#09234a;font-weight:700;cursor:pointer;pointer-events:auto';
+focusToggle.addEventListener('click',()=>{autoFocusEnabled=!autoFocusEnabled;focusToggle.textContent='Auto-focus tornado / PDS: '+(autoFocusEnabled?'ON':'OFF');focusToggle.setAttribute('aria-pressed',String(autoFocusEnabled));});
+const alertStatus=document.getElementById('tns-overlay-status');if(alertStatus)alertStatus.insertAdjacentElement('afterend',focusToggle);
+
+// The alert board uses exactly the same authoritative NWS response as the map.
+// No synthetic counts, sample alerts, or invented storm details.
+const tnsBoard={items:[],offset:0,pageSize:5};
+const tnsList=document.getElementById('tns-alert-list');
+const tnsPage=document.getElementById('tns-alert-page');
+function tnsAlertPriority(f){
+ const p=f.properties||{},e=String(p.event||'').toLowerCase();
+ if(e==='tornado warning')return isPDS(p)?0:1;
+ if(e==='severe thunderstorm warning')return 2;
+ if(e==='flash flood warning')return 3;
+ if(e==='tornado watch')return 4;
+ if(e==='severe thunderstorm watch')return 5;
+ if(e.includes('warning'))return 6;
+ if(e.includes('watch'))return 7;
+ return 8;
+}
+function tnsAlertKind(f){
+ const p=f.properties||{},e=String(p.event||'').toLowerCase();
+ if(e==='tornado warning')return isPDS(p)?'pds':'tornado';
+ if(e==='severe thunderstorm warning')return 'severe';
+ if(e.includes('watch'))return 'watch';
+ if(e.includes('flood'))return 'flood';
+ if(/winter|blizzard|snow|ice|freeze|wind chill/.test(e))return 'winter';
+ return 'other';
+}
+function tnsRenderBoard(){
+ tnsList.replaceChildren();
+ const a=tnsBoard.items,start=tnsBoard.offset;
+ const visible=a.slice(start,start+tnsBoard.pageSize);
+ if(!a.length){const el=document.createElement('div');el.className='tns-alert-empty';el.textContent='No active NWS watches, warnings or advisories in the current feed.';tnsList.append(el);}
+ for(const f of visible){
+  const p=f.properties||{},event=String(p.event||'NWS Alert');
+  const link=document.createElement('a');link.className='tns-alert-item tns-type-'+tnsAlertKind(f);
+  const url=p['@id']||p.id||f.id||'';
+  link.href=/^https:\/\/api\.weather\.gov\/alerts\//.test(url)?url:'https://www.weather.gov/';
+  link.target='_blank';link.rel='noopener noreferrer';
+  if(isPDS(p)&&/tornado/i.test(event)){const flag=document.createElement('span');flag.className='tns-alert-pds-flag';flag.textContent='PDS / EXTREME THREAT';link.append(flag);}
+  const title=document.createElement('div');title.className='tns-alert-event';title.textContent=event.toUpperCase();link.append(title);
+  const area=document.createElement('div');area.className='tns-alert-area';area.textContent=String(p.areaDesc||'Affected area not specified').split(';').slice(0,3).join(' · ');link.append(area);
+  const expiry=document.createElement('div');expiry.className='tns-alert-expiry';
+  const time=p.ends||p.expires;
+  expiry.textContent=time?'UNTIL '+new Date(time).toLocaleString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'}):'OPEN OFFICIAL NWS ALERT';
+  link.append(expiry);tnsList.append(link);
+ }
+ tnsPage.textContent=a.length?`${start+1}–${Math.min(start+tnsBoard.pageSize,a.length)} OF ${a.length}`:'NO ACTIVE ALERTS';
+ document.getElementById('tns-alert-prev').disabled=start===0;
+ document.getElementById('tns-alert-next').disabled=start+tnsBoard.pageSize>=a.length;
+}
+document.getElementById('tns-alert-prev').addEventListener('click',()=>{tnsBoard.offset=Math.max(0,tnsBoard.offset-tnsBoard.pageSize);tnsRenderBoard()});
+document.getElementById('tns-alert-next').addEventListener('click',()=>{tnsBoard.offset+=tnsBoard.pageSize;tnsRenderBoard()});
+function tnsUpdateBoard(features){
+ const a=features.filter(f=>f&&f.properties&&f.properties.event&&(!f.properties.expires||Date.parse(f.properties.expires)>Date.now()));
+ a.sort((x,y)=>tnsAlertPriority(x)-tnsAlertPriority(y)||Date.parse(y.properties.sent||0)-Date.parse(x.properties.sent||0));
+ const count=(fn)=>a.filter(fn).length;
+ document.getElementById('tns-count-tornado').textContent=count(f=>f.properties.event==='Tornado Warning');
+ document.getElementById('tns-count-severe').textContent=count(f=>f.properties.event==='Severe Thunderstorm Warning');
+ document.getElementById('tns-count-watches').textContent=count(f=>/^(Tornado Watch|Severe Thunderstorm Watch)$/.test(f.properties.event));
+ document.getElementById('tns-alert-update').textContent=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+ tnsBoard.items=a;tnsBoard.offset=0;tnsRenderBoard();
+}
+
+let alertsRefreshing=false;
+async function refreshAlerts(){
+ if(alertsRefreshing)return;alertsRefreshing=true;
+ try{
+  const r=await fetch('https://api.weather.gov/alerts/active',{headers:{Accept:'application/geo+json'}});
+  if(!r.ok)throw Error('NWS '+r.status);
+  const j=await r.json();
+  const all=(j.features||[]).filter(f=>/warning|watch/i.test(f.properties?.event||''));
+  tnsUpdateBoard(j.features||[]);
+  // NWS tornado/severe watches commonly have null geometry. Resolve their actual
+  // NWS forecast/county zones (not a fabricated bounding rectangle) and render them.
+  const mapped=all.filter(f=>f.geometry);
+  const missing=all.filter(f=>!f.geometry);
+  const priority=missing.filter(f=>/tornado watch|severe thunderstorm watch/i.test(f.properties?.event||''));
+  const others=missing.filter(f=>!/tornado watch|severe thunderstorm watch/i.test(f.properties?.event||''));
+  const toResolve=[...priority,...others];
+  const tasks=[];
+  for(const f of toResolve){
+   const zones=(f.properties?.affectedZones||[]).filter(u=>/^https:\/\/api\.weather\.gov\/zones\//.test(u));
+   for(const u of zones){if(tasks.length>=160)break;tasks.push({f,u});}
+   if(tasks.length>=160)break;
+  }
+  // Concurrency-limited requests; cached between refreshes to protect NWS servers.
+  const zoneShapes=[];
+  let ix=0;
+  async function worker(){while(ix<tasks.length){const t=tasks[ix++];try{
+   let shape=zoneCache.get(t.u);
+   if(shape===undefined){const r=await fetch(t.u,{headers:{Accept:'application/geo+json'}});if(!r.ok)continue;
+    const j=await r.json();shape=j.geometry||null;zoneCache.set(t.u,shape);}
+   if(shape)zoneShapes.push({type:'Feature',geometry:shape,properties:t.f.properties,id:t.f.id});
+  }catch(e){/* A missing zone is not drawn as an invented polygon. */}}}
+  await Promise.all(Array.from({length:Math.min(6,tasks.length)},()=>worker()));
+  const display=[...mapped,...zoneShapes];
+  alertLayer.clearLayers();alertLayer.addData({type:'FeatureCollection',features:display});
+  lastAlertsOK=true;
+  if(alertStatus)alertStatus.textContent='NWS LIVE · '+all.length+' ACTIVE WARNINGS / WATCHES ('+display.length+' MAPPED AREAS)' + (all.length===0?' · NO ACTIVE WATCHES OR WARNINGS':'');
+  // NWS sometimes publishes alerts without polygons. They remain in the count, not falsely mapped.
+  const critical=display.filter(f=>String(f.properties?.event||'').toLowerCase()==='tornado warning'||isPDS(f.properties||{}));
+  critical.sort((a,b)=>Number(isPDS(b.properties||{}))-Number(isPDS(a.properties||{})) || Date.parse(b.properties?.sent||0)-Date.parse(a.properties?.sent||0));
+  if(critical.length&&autoFocusEnabled&&layerEnabled.alerts){
+   const f=critical[0],id=String(f.id||f.properties?.id||f.properties?.sent||'');
+   if(id&&id!==lastFocusId){
+    lastFocusId=id;
+    const temp=L.geoJSON(f),bounds=temp.getBounds();
+    if(bounds.isValid()){
+     map.fitBounds(bounds.pad(.65),{animate:true,duration:1,maxZoom:embedded?7:9});
+     if(alertStatus)alertStatus.textContent+=' · '+(isPDS(f.properties||{})?'PDS':'TORNADO')+' AUTO-FOCUS';
+    }
+   }
+  }
+ }catch(e){
+  if(alertStatus)alertStatus.textContent=lastAlertsOK?'NWS alerts: last successful update — refresh failed':'NWS alerts temporarily unavailable';
+  document.getElementById('tns-alert-update').textContent='FEED ERROR';
+  if(!lastAlertsOK){tnsList.replaceChildren();const msg=document.createElement('div');msg.className='tns-alert-empty';msg.textContent='Official NWS alert feed unavailable. Do not rely on this display for safety decisions.';tnsList.append(msg);}
+ }finally{alertsRefreshing=false;}
+}
+function refreshRadar(){
+ radar.setParams({_refresh:Math.floor(Date.now()/300000)},false);
+ radar.redraw();
+}
+setInterval(refreshAlerts,60000);
+setInterval(()=>{if(layerEnabled.radar)refreshRadar()},300000);
+
+// NOAA numerical models (HRRR/GFS/NAM) served as forecast grid samples by Open-Meteo.
+// Forecast raster is an interpolation of real model values, not a native model pixel grid.
+map.createPane('modelPane');map.getPane('modelPane').style.zIndex=358;
+map.getPane('modelPane').style.pointerEvents='none';
+let modelRaster=null,modelSeq=0,modelTimer=null;
+const modelExtent=L.latLngBounds([24,-125],[50,-66]);
+const modelType=document.getElementById('model-type'),modelField=document.getElementById('model-field'),modelHour=document.getElementById('model-hour'),modelStatus=document.getElementById('model-status');
+const modelControls=document.getElementById('model-controls');
+function modelColor(v,field){
+ let t;
+ if(field==='temperature_2m')t=Math.max(0,Math.min(1,(v+10)/115));
+ else if(field==='precipitation')t=Math.max(0,Math.min(1,Math.sqrt(Math.max(0,v)/15)));
+ else if(field==='wind_speed_10m')t=Math.max(0,Math.min(1,v/75));
+ else t=Math.max(0,Math.min(1,(v-970)/75));
+ const stops=field==='precipitation'?[[0,0,0,0],[.12,25,145,70],[.38,40,198,205],[.65,243,200,46],[1,215,40,80]]:
+ [[0,48,75,190],[.22,36,155,190],[.43,69,174,96],[.61,235,215,65],[.8,245,125,35],[1,183,35,58]];
+ for(let k=1;k<stops.length;k++)if(t<=stops[k][0]){
+  const a=stops[k-1],b=stops[k],f=(t-a[0])/(b[0]-a[0]);
+  return [1,2,3].map(i=>Math.round(a[i]+(b[i]-a[i])*f));
+ }
+ return stops.at(-1).slice(1);
+}
+async function loadModel(){
+ const seq=++modelSeq;
+ if(!layerEnabled.models)return;
+ modelStatus.textContent='Loading NOAA '+modelType.selectedOptions[0].text+' forecast…';
+ const coords=[];
+ for(let yi=0;yi<7;yi++)for(let xi=0;xi<11;xi++)
+  coords.push({lat:24+yi*26/6,lon:-125+xi*59/10});
+ const field=modelField.value,hour=+modelHour.value;
+ const params=new URLSearchParams({
+  latitude:coords.map(c=>c.lat.toFixed(3)).join(','),
+  longitude:coords.map(c=>c.lon.toFixed(3)).join(','),
+  hourly:field,models:modelType.value,forecast_hours:String(Math.max(52,hour+4)),
+  timezone:'GMT',temperature_unit:'fahrenheit',wind_speed_unit:'mph'
+ });
+ try{
+  const r=await fetch('https://api.open-meteo.com/v1/gfs?'+params.toString(),{signal:AbortSignal.timeout(30000)});
+  if(!r.ok)throw Error('Forecast service HTTP '+r.status);
+  const json=await r.json(),arr=Array.isArray(json)?json:[json];
+  if(seq!==modelSeq||!layerEnabled.models)return;
+  const now=Date.now(),samples=[],times=[];
+  for(let i=0;i<Math.min(coords.length,arr.length);i++){
+   const d=arr[i],ts=d.hourly?.time,vs=d.hourly?.[field];
+   if(!ts||!vs)continue;
+   let index=ts.findIndex(t=>Date.parse(t+'Z')>=now+hour*3600000-1800000);
+   if(index<0)index=ts.length-1;
+   const val=vs[index];
+   if(Number.isFinite(val)){samples.push({...coords[i],v:val});times.push(ts[index]);}
+  }
+  if(samples.length<20)throw Error('Not enough model grid values');
+  const W=420,H=220,canvas=document.createElement('canvas');
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d'),img=ctx.createImageData(W,H),px=img.data;
+  for(let y=0;y<H;y++){
+   const lat=50-(y+.5)*26/H,cs=Math.cos(lat*Math.PI/180);
+   for(let x=0;x<W;x++){
+    const lon=-125+(x+.5)*59/W;
+    let total=0,weight=0;
+    for(const p of samples){
+     const d=((lat-p.lat)**2+((lon-p.lon)*cs)**2);
+     const w=1/Math.pow(d+.08,1.25);
+     total+=p.v*w;weight+=w;
+    }
+    const v=total/weight,c=modelColor(v,field),idx=(y*W+x)*4;
+    px[idx]=c[0];px[idx+1]=c[1];px[idx+2]=c[2];
+    px[idx+3]=field==='precipitation'&&v<.15?0:175;
+   }
+  }
+  ctx.putImageData(img,0,0);
+  const next=L.imageOverlay(canvas.toDataURL('image/png'),modelExtent,{pane:'modelPane',opacity:.8,interactive:false});
+  next.addTo(map);
+  if(modelRaster)map.removeLayer(modelRaster);
+  modelRaster=next;
+  modelStatus.textContent=modelType.selectedOptions[0].text+' · '+modelField.selectedOptions[0].text+' · valid '+(times[0]||'unknown')+' UTC · interpolated model grid';
+ }catch(e){if(seq===modelSeq)modelStatus.textContent='Model unavailable: '+e.message+' · try another model or forecast hour';}
+}
+function scheduleModel(){clearTimeout(modelTimer);modelTimer=setTimeout(loadModel,250);}
+[modelType,modelField,modelHour].forEach(el=>el.addEventListener('change',()=>{if(layerEnabled.models)scheduleModel()}));
+setInterval(()=>{if(layerEnabled.models)loadModel()},30*60000);
+
+// NOAA/NWS Storm Prediction Center Day 1 categorical forecast polygons.
+// Native geographic polygons remain fixed while zooming or panning.
+map.createPane('spcPane');map.getPane('spcPane').style.zIndex=415;
+map.getPane('spcPane').style.pointerEvents='none';
+const spcColors={2:['#c1e9c1','#55bb55'],3:['#66a366','#005500'],4:['#ffe066','#ddaa00'],5:['#ffa366','#ff6600'],6:['#e06666','#cc0000'],8:['#ee99ee','#cc00cc']};
+const spcLayer=L.geoJSON(null,{
+ pane:'spcPane',interactive:false,
+ style:f=>{const dn=Number(f.properties?.dn),c=spcColors[dn]||['#b5e1c3','#4b9859'];
+  return {color:c[1],weight:1.8,opacity:.95,fillColor:c[0],fillOpacity:.38};}
+});
+let spcLoading=false,spcLastSuccess=0,spcFetchSequence=0;
+const spcStatus=document.getElementById('spc-status');
+async function refreshSPC(){
+ if(!layerEnabled.spc||spcLoading)return;
+ const seq=++spcFetchSequence;spcLoading=true;
+ spcStatus.textContent='Loading live NOAA SPC Day 1 outlook…';
+ try{
+  const url='https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/FeatureServer/1/query?where=1%3D1&outFields=dn%2Cvalid%2Cexpire%2Cissue&returnGeometry=true&outSR=4326&f=geojson';
+  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),18000);
+  let response;
+  try{response=await fetch(url,{cache:'no-store',signal:ctl.signal});}finally{clearTimeout(timer)}
+  if(!response.ok)throw Error('NOAA service '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data.features))throw Error('Invalid SPC GeoJSON');
+  if(!layerEnabled.spc||seq!==spcFetchSequence)return;
+  spcLayer.clearLayers();spcLayer.addData(data);
+  if(!map.hasLayer(spcLayer))spcLayer.addTo(map);
+  spcLastSuccess=Date.now();
+  const valid=data.features.find(f=>f.properties?.valid)?.properties?.valid;
+  spcStatus.textContent='SPC Day 1 LIVE · '+data.features.length+' areas'+(valid?' · '+String(valid).slice(0,70):'')+' · updated '+new Date(spcLastSuccess).toLocaleTimeString();
+ }catch(err){
+  if(layerEnabled.spc)spcStatus.textContent=(spcLastSuccess?'SPC update failed · showing last successful outlook':'SPC outlook unavailable')+' ('+err.message+')';
+ }finally{spcLoading=false}
+}
+setInterval(()=>{if(layerEnabled.spc)refreshSPC()},15*60*1000);
+
+const stateLayer=L.layerGroup().addTo(map),labels=L.layerGroup().addTo(map);
+const stateAbbr={Alabama:'AL',Arizona:'AZ',Arkansas:'AR',California:'CA',Colorado:'CO',Connecticut:'CT',Delaware:'DE',Florida:'FL',Georgia:'GA',Idaho:'ID',Illinois:'IL',Indiana:'IN',Iowa:'IA',Kansas:'KS',Kentucky:'KY',Louisiana:'LA',Maine:'ME',Maryland:'MD',Massachusetts:'MA',Michigan:'MI',Minnesota:'MN',Mississippi:'MS',Missouri:'MO',Montana:'MT',Nebraska:'NE',Nevada:'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND',Ohio:'OH',Oklahoma:'OK',Oregon:'OR',Pennsylvania:'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD',Tennessee:'TN',Texas:'TX',Utah:'UT',Vermont:'VT',Virginia:'VA',Washington:'WA','West Virginia':'WV',Wisconsin:'WI',Wyoming:'WY'};
+const cities=[
+["Portland","KPDX",45.59,-122.6],["San Francisco","KSFO",37.62,-122.38],["Sacramento","KSMF",38.7,-121.59],
+["San Diego","KSAN",32.73,-117.19],["Boise","KBOI",43.56,-116.22],["Spokane","KGEG",47.62,-117.53],
+["Reno","KRNO",39.5,-119.77],["Tucson","KTUS",32.12,-110.94],["El Paso","KELP",31.85,-106.38],
+["Lubbock","KLBB",33.66,-101.82],["Amarillo","KAMA",35.22,-101.71],["Midland","KMAF",31.94,-102.2],
+["Houston","KIAH",29.98,-95.34],["Austin","KAUS",30.19,-97.67],["Corpus Christi","KCRP",27.77,-97.5],
+["Las Vegas","KLAS",36.08,-115.15],["Great Falls","KGTF",47.48,-111.37],["Fargo","KFAR",46.92,-96.82],
+["Bismarck","KBIS",46.77,-100.75],["Omaha","KOMA",41.3,-95.9],["Des Moines","KDSM",41.53,-93.66],
+["Wichita","KICT",37.65,-97.43],["St Louis","KSTL",38.75,-90.37],["Little Rock","KLIT",34.73,-92.22],
+["Jackson","KJAN",32.32,-90.08],["Birmingham","KBHM",33.56,-86.75],["Nashville","KBNA",36.12,-86.68],
+["Louisville","KSDF",38.17,-85.74],["Indianapolis","KIND",39.72,-86.29],["Detroit","KDTW",42.21,-83.35],
+["Cleveland","KCLE",41.41,-81.85],["Pittsburgh","KPIT",40.49,-80.23],["Buffalo","KBUF",42.94,-78.73],
+["Boston","KBOS",42.36,-71.01],["Philadelphia","KPHL",39.87,-75.24],["Washington","KDCA",38.85,-77.04],
+["Raleigh","KRDU",35.88,-78.79],["Charleston","KCHS",32.9,-80.04],["Jacksonville","KJAX",30.49,-81.69],
+["Orlando","KMCO",28.43,-81.31],["Pensacola","KPNS",30.47,-87.19],["Mobile","KMOB",30.69,-88.24],
+["Cheyenne","KCYS",41.16,-104.81],["Casper","KCPR",42.91,-106.46],["Grand Junction","KGJT",39.12,-108.53]
+,
+["Seattle","KSEA",47.45,-122.31],["Billings","KBIL",45.81,-108.54],["Rapid City","KRAP",44.05,-103.06],
+["Minneapolis","KMSP",44.88,-93.22],["Chicago","KORD",41.98,-87.91],["New York","KJFK",40.64,-73.78],
+["Salt Lake City","KSLC",40.79,-111.98],["Denver","KDEN",39.86,-104.67],["Kansas City","KMCI",39.3,-94.71],
+["Cincinnati","KCVG",39.05,-84.67],["Los Angeles","KLAX",33.94,-118.41],["Phoenix","KPHX",33.43,-112.01],
+["Albuquerque","KABQ",35.04,-106.61],["Oklahoma City","KOKC",35.39,-97.6],["Dallas / Fort Worth","KDFW",32.9,-97.04],
+["Memphis","KMEM",35.04,-89.98],["Charlotte","KCLT",35.21,-80.94],["Atlanta","KATL",33.64,-84.43],
+["New Orleans","KMSY",29.99,-90.26],["San Antonio","KSAT",29.53,-98.47],["Tampa","KTPA",27.98,-82.53],["Miami","KMIA",25.8,-80.29]
+];
+let observations=[],stateGeo=null;
+const palette=[[15,[25,63,190]],[30,[29,139,206]],[45,[47,174,148]],[60,[109,189,77]],[70,[220,207,53]],[80,[242,153,42]],[95,[218,62,38]],[110,[143,19,44]]];
+function color(v){if(v<=palette[0][0])return palette[0][1];for(let i=1;i<palette.length;i++){let a=palette[i-1],b=palette[i];if(v<=b[0]){let f=(v-a[0])/(b[0]-a[0]);return a[1].map((x,k)=>Math.round(x+(b[1][k]-x)*f))}}return palette.at(-1)[1]}
+let rasterOverlay=null;
+function heat(){
+ if(rasterOverlay){map.removeLayer(rasterOverlay);rasterOverlay=null;}
+ if(!layerEnabled.temperature||observations.length<5)return;
+ // Continuous national temperature field using inverse-distance weighting (IDW).
+ // A single raster is draped over the entire map, not circles around stations.
+ const bounds=[[23.0,-126.0],[50.9,-65.0]],W=720,H=400;
+ const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+ const ctx=canvas.getContext('2d');const img=ctx.createImageData(W,H),pixels=img.data;
+ const stations=observations.map(o=>({x:o.lon,y:o.lat,t:o.temp}));
+ for(let py=0;py<H;py++){
+  const lat=50.9-(py+.5)/H*(50.9-23.0),cos=Math.cos(lat*Math.PI/180);
+  for(let px=0;px<W;px++){
+   const lon=-126+(px+.5)/W*61;
+   // Nearest six valid observations, with smoothly weighted distance.
+   let nearest=[];
+   for(const p of stations){const dx=(lon-p.x)*cos,dy=lat-p.y,d=dx*dx+dy*dy+.13;
+    if(nearest.length<6){nearest.push([d,p.t]);nearest.sort((a,b)=>a[0]-b[0]);}
+    else if(d<nearest[5][0]){nearest[5]=[d,p.t];nearest.sort((a,b)=>a[0]-b[0]);}
+   }
+   let sum=0,wt=0;
+   for(const [d,t] of nearest){const w=1/Math.pow(d,1.25);sum+=t*w;wt+=w;}
+   const rgb=color(sum/wt),i=(py*W+px)*4;
+   pixels[i]=rgb[0];pixels[i+1]=rgb[1];pixels[i+2]=rgb[2];pixels[i+3]=195;
+  }
+ }
+ ctx.putImageData(img,0,0);
+ rasterOverlay=L.imageOverlay(canvas.toDataURL('image/png'),bounds,{opacity:.85,interactive:false,pane:'temperatureRaster'}).addTo(map);
+ // Keep satellite terrain underneath, but keep states and labels above the raster.
+}
+function render(){
+ labels.clearLayers();
+ if(!layerEnabled.cityTemps)return;
+ const boxes=[],sz=map.getSize(),z=map.getZoom();
+ const displayStations=new Set(["KSEA","KBIL","KRAP","KMSP","KORD","KJFK","KSLC","KDEN","KMCI","KCVG","KLAX","KPHX","KABQ","KOKC","KDFW","KMEM","KCLT","KATL","KMSY","KSAT","KTPA","KMIA"]);
+ for(const o of observations){
+  if(!displayStations.has(o.id))continue;
+  const p=map.latLngToContainerPoint([o.lat,o.lon]);
+  const w=Math.max(62,Math.min(145,o.name.length*6.4+17))*(embedded?1:1.1),h=49;
+  const b={l:p.x-w/2-5,r:p.x+w/2+5,t:p.y-h/2-5,b:p.y+h/2+5};
+  if(b.l<3||b.r>sz.x-3||b.t<3||b.b>sz.y-3)continue;
+  if(boxes.some(a=>b.l<a.r&&b.r>a.l&&b.t<a.b&&b.b>a.t))continue;
+  boxes.push(b);
+  const label=`<div class="readout"><span class="number">${o.temp}°</span><span class="name">${o.name}</span></div>`;
+  L.marker([o.lat,o.lon],{interactive:false,icon:L.divIcon({className:'temp-label',html:label,iconSize:[0,0],iconAnchor:[0,0]})}).addTo(labels);
+ }
+ // The temperature legend intentionally shows only the color gradient and labels.
+}
+fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json').then(r=>r.json()).then(g=>{
+ stateGeo=g;
+ L.geoJSON(g,{style:f=>({color:'#f7fcff',weight:f.properties.name==='Texas'?1.8:1.1,opacity:.82,fillOpacity:0}),interactive:false}).addTo(stateLayer);
+ for(const f of g.features){const a=stateAbbr[f.properties.name];if(!a)continue;const p=L.geoJSON(f).getBounds().getCenter();if(p.lng<-126||p.lng>-66||p.lat<24||p.lat>50)continue;
+ L.marker(p,{interactive:false,icon:L.divIcon({className:'state-label',html:a,iconSize:[28,18],iconAnchor:[14,9]})}).addTo(stateLayer);
+ }
+}).catch(()=>{});
+async function fetchTemps(){
+ let ix=0;const data=[];
+ async function work(){while(ix<cities.length){const [name,id,lat,lon]=cities[ix++];try{
+  const response=await fetch(`https://api.weather.gov/stations/${id}/observations/latest`,{headers:{Accept:'application/geo+json'},signal:AbortSignal.timeout(12000)});
+  if(!response.ok)continue;const p=(await response.json()).properties,c=p.temperature?.value,t=Date.parse(p.timestamp);
+  if(typeof c!=='number'||!Number.isFinite(t)||Date.now()-t>100*60000)continue;
+  data.push({name,id,lat,lon,temp:Math.round(c*9/5+32)});
+ }catch(e){}}}
+ await Promise.all(Array.from({length:6},work));observations=data;heat();render();
+}
+fetchTemps();setInterval(()=>{if(layerEnabled.temperature||layerEnabled.cityTemps)fetchTemps()},12*60000);
+refreshAlerts();
+L.DomEvent.disableClickPropagation(document.getElementById('layer-menu'));
+document.querySelectorAll('#layer-menu input[data-layer]').forEach(input=>{
+ input.addEventListener('change',()=>{
+  const key=input.dataset.layer,on=input.checked;
+  layerEnabled[key]=on;
+  if(key==='spc'){
+   document.getElementById('spc-menu-legend').hidden=!on;
+   if(on){spcLayer.addTo(map);refreshSPC();}
+   else{spcFetchSequence++;if(map.hasLayer(spcLayer))map.removeLayer(spcLayer);spcStatus.textContent='SPC layer off';}
+  }
+  if(key==='models'){
+   modelControls.classList.toggle('active',on);
+   if(on)loadModel();
+   else{modelSeq++;if(modelRaster){map.removeLayer(modelRaster);modelRaster=null;}modelStatus.textContent='Model layer off';}
+  }
+  if(key==='temperature'){if(on){if(observations.length)heat();else fetchTemps()}else if(rasterOverlay){map.removeLayer(rasterOverlay);rasterOverlay=null;}}
+  if(key==='cityTemps'){if(on&&!observations.length)fetchTemps();else render();}
+  if(key==='states'){if(on)stateLayer.addTo(map);else map.removeLayer(stateLayer);}
+  if(key==='counties'){if(on)counties.addTo(map);else map.removeLayer(counties);}
+  if(key==='radar'){if(on){radar.addTo(map);refreshRadar()}else map.removeLayer(radar);}
+  if(key==='alerts'){if(on){alertLayer.addTo(map);refreshAlerts()}else map.removeLayer(alertLayer);}
+  if(key==='wpc'){
+   if(on)updateWPC();
+   else {if(wpcImage){map.removeLayer(wpcImage);wpcImage=null;}
+     const status=document.getElementById('wpc-status');if(status)status.textContent='WPC forecast off';}
+  }
+  if(key==='roads'||key==='places')updateRoads();
+ });
+});
+
+// Start the requested weather layers immediately, including in the homepage iframe.
+alertLayer.addTo(map); // Ensure warning polygons are visible immediately, including homepage embed.
+radar.addTo(map);refreshRadar();
+updateWPC();
+spcLayer.addTo(map);
+document.getElementById('spc-menu-legend').hidden=false;
+refreshSPC();
+// Reveal controls on hover for mouse users; click/tap remains available.
+const layerMenu=document.getElementById('layer-menu');
+layerMenu.addEventListener('mouseenter',()=>{layerMenu.open=true;});
+layerMenu.addEventListener('mouseleave',()=>{layerMenu.open=false;});
+map.on('zoomend moveend resize',render);
+</script><script>
+/* Live NOAA/NWS weather product feed. Direct NWS JSON first; SPC RSS is supplementary.
+   Only products with verified issue dates in the previous 24 hours are shown. */
+(function(){
+'use strict';
+const box=document.getElementById('tns-news-scroll'),list=document.getElementById('tns-news-items'),source=document.getElementById('tns-news-source'),button=document.getElementById('tns-news-toggle');
+const offices=['EWX','SJT','FWD','HGX','CRP','BRO','LUB','AMA','MAF','EPZ','SHV','OUN','TSA','LZK','MOB','BMX','JAN','LIX','FFC','JAX','TBW','MFL','PHI','OKX','BOX','LOT','MKX','MPX','DMX','OAX','ICT','TOP','ABQ','PSR'];
+const spcFeeds=[
+ {name:'SPC OUTLOOK',url:'https://www.spc.noaa.gov/products/spcacrss.xml'},
+ {name:'SPC MESOSCALE',url:'https://www.spc.noaa.gov/products/spcmdrss.xml'},
+ {name:'SPC WATCH',url:'https://www.spc.noaa.gov/products/spcwwrss.xml'}
+];
+let paused=false,loading=false,round=0,cache=[];
+const clean=s=>String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+function valid(x){
+ const t=Date.parse(x.date),now=Date.now();
+ return x.title&&x.title.length>7&&/^https:\/\//.test(x.link)&&Number.isFinite(t)&&t<=now+300000&&t>=now-86400000;
+}
+async function json(url,ms=9000){
+ const r=await fetch(url,{headers:{Accept:'application/geo+json, application/json'},signal:AbortSignal.timeout(ms),cache:'no-store'});
+ if(!r.ok)throw Error('HTTP '+r.status);
+ return r.json();
+}
+function officialLink(x,kind,office){
+ if(kind==='SWO')return 'https://www.spc.noaa.gov/products/outlook/day1otlk.html';
+ if(kind==='MCD')return 'https://www.spc.noaa.gov/products/md/';
+ if(kind==='SEL'||kind==='WWP')return 'https://www.spc.noaa.gov/products/watch/';
+ if(office&&/^[A-Z]{3}$/.test(office))return 'https://forecast.weather.gov/product.php?site=NWS&issuedby='+encodeURIComponent(office)+'&product='+encodeURIComponent(kind);
+ return 'https://www.weather.gov/';
+}
+async function products(kind,office){
+ const u='https://api.weather.gov/products/types/'+kind+'/locations/'+office;
+ const data=await json(u);
+ return (data['@graph']||data.products||[]).map(x=>{
+  const date=x.issuanceTime||x.issueTime||x.date;
+  const title=clean(x.productName||x.name||'');
+  const type=kind==='AFD'?'NWS '+office+' FORECAST':kind==='HWO'?'NWS '+office+' HAZARDS':kind==='SPS'?'NWS '+office+' SPECIAL':kind==='SWO'?'SPC OUTLOOK':kind==='MCD'?'SPC MESOSCALE':kind==='SEL'?'SPC WATCH':'NWS '+office;
+  return {title:(title&&title.length>12?title:({AFD:'Area Forecast Discussion',HWO:'Hazardous Weather Outlook',SPS:'Special Weather Statement',SWO:'SPC Convective Outlook',MCD:'SPC Mesoscale Discussion',SEL:'SPC Watch'}[kind]||kind))+' — '+(kind==='SWO'||kind==='MCD'||kind==='SEL'?'Storm Prediction Center':'NWS '+office),date,link:officialLink(x,kind,office),type,id:x.id};
+ }).filter(valid);
+}
+async function alerts(){
+ const d=await json('https://api.weather.gov/alerts/active?limit=300');
+ return (d.features||[]).map(f=>({title:clean(f.properties?.headline||f.properties?.event+' — '+f.properties?.areaDesc),date:f.properties?.sent,link:f.properties?.id||f.id||'https://www.weather.gov/',type:'NWS '+clean(f.properties?.event||'ALERT')})).filter(valid);
+}
+async function spcFeed(feed){
+ // RSS-to-JSON is optional. The direct NWS API remains the primary data source.
+ const d=await json('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed.url),6500);
+ if(d.status!=='ok')throw Error('RSS service');
+ return (d.items||[]).map(x=>({title:clean(x.title),date:x.pubDate,link:x.link,type:feed.name})).filter(valid);
+}
+function texHeadlines(items){
+ // All editorial entries derive from successfully retrieved, timestamped source items.
+ const alerts=items.filter(x=>x.type.startsWith('NWS ')&&/\b(WARNING|WATCH|ADVISORY|ALERT)\b/i.test(x.type));
+ const tornado=alerts.find(x=>/TORNADO/i.test(x.type));
+ const severe=alerts.find(x=>/SEVERE THUNDERSTORM/i.test(x.type));
+ const flood=alerts.find(x=>/FLOOD/i.test(x.type));
+ const spc=items.find(x=>x.type.startsWith('SPC '));
+ const local=items.find(x=>/\bNWS (EWX|SJT|FWD)\b/.test(x.type));
+ const result=[];
+ function add(title,x,detail){
+  if(!x)return;
+  result.push({title,link:x.link,date:x.date,type:'TNS WEATHER INTELLIGENCE · TEX',detail,tns:true});
+ }
+ if(tornado)add("Tex here. There's a tornado-related alert in the latest NWS updates. Please check the affected area — don't assume it's near you.",tornado,'Official alert: '+tornado.title);
+ if(severe)add("Hey folks, Tex here. The Weather Service has a severe thunderstorm warning out. Let's keep an eye on where that storm is headed.",severe,'Official alert: '+severe.title);
+ if(flood)add("A quick heads-up from Tex: Flood alerts are showing up in the official updates. Be careful around low-water crossings.",flood,'Official alert: '+flood.title);
+ if(local)add("Tex checking in from the Hill Country. Our regional Weather Service offices have issued fresh guidance — take a look at the latest discussion.",local,'Based on: '+local.type+' · '+local.title);
+ if(spc)add("Folks, I'm watching the latest Storm Prediction Center guidance. Here's the official update so you can see what forecasters are tracking.",spc,'Based on: '+spc.type+' · '+spc.title);
+ if(!result.length&&items.length)add("Tex here. I've got fresh official weather updates coming through the TNS desk. Tap here for the newest one.",items[0],'Based on: '+items[0].type+' · '+items[0].title);
+ return result.slice(0,5);
+}
+function show(items){
+ list.replaceChildren();
+ const intelligence=texHeadlines(items);
+ source.textContent='TNS LIVE FEED · '+items.length+' RECENT ITEMS';
+ const entries=[];
+ // Rotate TNS editorial summaries among real NOAA/NWS items, not as unverified warnings.
+ items.slice(0,26).forEach((x,i)=>{
+  if(i%5===0&&intelligence.length)entries.push(intelligence[Math.floor(i/5)%intelligence.length]);
+  entries.push(x);
+ });
+ if(!entries.length){
+  const p=document.createElement('p');p.className='tns-news-title';p.textContent='TNS Weather Desk: No verified weather updates could be loaded from the past 24 hours. Live feeds may be temporarily unavailable. Check the official SPC forecast.';
+  list.append(p);
+  const a=document.createElement('a');a.className='tns-news-item';a.href='https://www.spc.noaa.gov/';a.target='_blank';a.rel='noopener';a.textContent='Official SPC weather outlook';list.append(a);
+  return;
+ }
+ entries.forEach(x=>{
+  const a=document.createElement('a');a.className='tns-news-item';a.href=x.link;a.target='_blank';a.rel='noopener noreferrer';
+  if(x.tns){a.style.borderLeft='3px solid #f04a58';a.style.paddingLeft='9px';a.style.background='rgba(239,65,76,.07)';}
+  const tag=document.createElement('span');tag.className='tns-news-type';tag.textContent=x.type;
+  if(x.tns)tag.style.color='#ffacb1';
+  const title=document.createElement('span');title.className='tns-news-title';title.textContent=x.title;
+  const time=document.createElement('span');time.className='tns-news-date';
+  time.textContent=(x.tns?'Tex commentary · source issued ':'')+new Date(x.date).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  a.append(tag,title,time);
+  if(x.detail){const d=document.createElement('span');d.className='tns-news-date';d.textContent=x.detail;a.append(d);}
+  list.append(a);
+ });
+}
+async function load(){
+ if(loading)return;loading=true;
+ try{
+  const local=offices.slice((round*5)%offices.length,(round*5)%offices.length+5);
+  round++;
+  const jobs=[alerts(),products('SWO','KWNS'),products('MCD','KWNS'),products('SEL','KWNS'),
+   ...local.flatMap(o=>[products('AFD',o),products('HWO',o),products('SPS',o)]),
+   ...spcFeeds.map(spcFeed)];
+  const res=await Promise.allSettled(jobs);
+  const all=[...cache.filter(valid),...res.flatMap(x=>x.status==='fulfilled'?x.value:[])].filter(valid);
+  all.sort((a,b)=>Date.parse(b.date)-Date.parse(a.date));
+  const unique=new Map();
+  for(const x of all){const k=x.id||x.link+'|'+x.title+'|'+x.date;if(!unique.has(k))unique.set(k,x)}
+  cache=[...unique.values()].slice(0,150);
+  show(cache);
+ }finally{loading=false}
+}
+button.addEventListener('click',()=>{paused=!paused;button.textContent=paused?'Play':'Pause'});
+let moving=false;
+setInterval(()=>{
+ if(paused||moving||box.matches(':hover')||box.contains(document.activeElement)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const first=list.querySelector('.tns-news-item');if(!first)return;
+ moving=true;
+ if(box.scrollTop>=list.scrollHeight-box.clientHeight-8)box.scrollTo({top:0,behavior:'instant'});
+ else box.scrollBy({top:first.getBoundingClientRect().height,behavior:'smooth'});
+ setTimeout(()=>moving=false,1100);
+},6500);
+load();setInterval(load,300000);
+})();
+</script></body></html>

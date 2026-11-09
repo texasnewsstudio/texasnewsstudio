@@ -1,0 +1,1 @@
+World Conflict Monitor map: removed map providers or configurations that might request an API key. Uses public OpenStreetMap and Esri World Topographic map tiles without a token. No other site pages changed. Public tile servers may have rate limits or outages.

@@ -1,0 +1,141 @@
+{
+  "instructions": "Insert newest story at start of stories, increase hero_capacity by 1 up to 10 to fill the hero. Once hero_capacity is 10, additional stories shift into the three cards. All published stories remain in archive. Run build_tns_featured.py after edits.",
+  "stories": [
+    {
+      "url": "black-sky-uk-restoration-plan-nov-2026.html",
+      "headline": "UK BLACK SKY PLAN REVEALED",
+      "summary": "Britain's grid restoration standard sets targets for recovery from a major outage; officials have not announced an imminent blackout.",
+      "category": "UK BLACKOUT PLANNING",
+      "image": "tns-feature-01-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Black Sky Event: How Britain Plans to Restore Power After a Nationwide Blackout",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "us-fbi-cisa-refrigeration-cyber-warning-nov-2026.html",
+      "headline": "FBI WARNS: FREEZERS TARGETED",
+      "summary": "Federal agencies say exposed refrigeration controllers could be manipulated to spoil food or compromise temperature-sensitive supplies.",
+      "category": "U.S. CYBER ALERT",
+      "image": "tns-feature-02-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for FBI and CISA Warn of Cyberattacks Against Refrigeration Systems Protecting Food and Medicine",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "europe-supermarket-freezer-attacks-nov-2026.html",
+      "headline": "EUROPE FREEZERS HACKED",
+      "summary": "Remote manipulation of refrigeration settings has caused costly food losses across multiple European countries.",
+      "category": "FOOD SUPPLY",
+      "image": "tns-feature-03-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Hackers Disrupt European Supermarket Freezers, Forcing Stores to Throw Away Food",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "france-blood-storage-cyberattack-nov-2026.html",
+      "headline": "BLOOD STORAGE CYBER SCARE",
+      "summary": "France's blood service says refrigeration settings were affected at three facilities, but blood products were secured.",
+      "category": "HOSPITAL SECURITY",
+      "image": "tns-feature-04-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Cyberattack Reaches French Blood Storage Refrigeration: Supplies Protected After Alarm",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "uk-ai-cyber-threat-infrastructure-2028.html",
+      "headline": "AI CYBER THREAT TO POWER",
+      "summary": "Britain's cybersecurity agency sees rising risk from AI-assisted intrusions, but says a future attack is not a confirmed current event.",
+      "category": "CRITICAL INFRASTRUCTURE",
+      "image": "tns-feature-05-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for UK Cyber Chief Warns AI-Enabled Attacks Could Disrupt Critical Infrastructure by 2028",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "hospital-generator-blackout-preparedness-2026.html",
+      "headline": "HOSPITALS: BLACKOUT RISK",
+      "summary": "Hospitals plan for grid failures, but extended outages test fuel supplies, equipment and support systems.",
+      "category": "EXPLAINER",
+      "image": "tns-feature-06-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Could a Black Sky Outage Affect Hospitals? Why Backup Generators and Fuel Matter",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "russia-ukraine-energy-strikes-nov-7-2026.html",
+      "headline": "RUSSIA HITS UKRAINE POWER",
+      "summary": "Attacks on November 7 damaged infrastructure as US-brokered peace talks approached.",
+      "category": "RUSSIA / UKRAINE",
+      "image": "tns-feature-07-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Russian Missile and Drone Strikes Trigger New Power and Water Outages in Ukraine",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "nato-poland-russia-border-sabotage-warning-2026.html",
+      "headline": "NATO BORDER ON ALERT",
+      "summary": "Poland increased security near Kaliningrad after suspicious activity, while officials cautioned the incident's intent was not confirmed.",
+      "category": "NATO / RUSSIA",
+      "image": "tns-feature-08-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Poland Warns of Possible Russian-Linked Sabotage Near NATO's Eastern Border",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "china-taiwan-defense-crisis-explainer-nov-2026.html",
+      "headline": "TAIWAN CRISIS WATCH",
+      "summary": "Taiwan's exercises and Chinese military pressure show the stakes, but no new invasion has been confirmed.",
+      "category": "CHINA / TAIWAN",
+      "image": "tns-feature-09-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for China–Taiwan Crisis: Why Military Drills and Civil Defense Are Under Scrutiny",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "us-israel-iran-qeshm-strikes-talks-nov-2026.html",
+      "headline": "IRAN STRIKES, TALKS CONTINUE",
+      "summary": "Iranian agencies reported projectiles striking Qeshm Island while Qatar said mediation efforts remain active.",
+      "category": "U.S. / ISRAEL / IRAN",
+      "image": "tns-feature-10-nov07.jpg",
+      "image_alt": "AI-generated conceptual editorial illustration for Iran Reports New Qeshm Island Strikes as US–Iran Negotiations Continue",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "black-sky-uk-power-grid-warning-november-2026.html",
+      "headline": "BLACK SKY WARNING!",
+      "summary": "Britain is discussing how to withstand a prolonged national power failure. Officials say there is no specific imminent threat.",
+      "category": "UK POWER GRID",
+      "image": "tns-black-sky-nov07.jpg",
+      "image_alt": "Conceptual editorial illustration of London during a hypothetical power outage",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "uk-ai-cyber-critical-infrastructure-warning-2026.html",
+      "headline": "AI CYBER THREAT RISES!",
+      "summary": "Britain’s NCSC warns artificial intelligence could accelerate attacks on essential services over the next two years.",
+      "category": "CYBERSECURITY",
+      "image": "tns-ai-cyber-nov07.jpg",
+      "image_alt": "Conceptual illustration of a cybersecurity threat to critical infrastructure",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "europe-supermarket-refrigeration-cyberattack-november-2026.html",
+      "headline": "HACKERS HIT FOOD SYSTEMS!",
+      "summary": "An attack affecting refrigeration systems in several European countries highlights the vulnerability of everyday infrastructure.",
+      "category": "EUROPE CYBER ATTACK",
+      "image": "tns-food-cyber-nov07.jpg",
+      "image_alt": "Conceptual illustration of supermarket refrigeration disruption",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "royal-navy-f35-russian-bomber-intercept-norway-2026.html",
+      "headline": "NATO JETS SCRAMBLE!",
+      "summary": "A Russian bomber drew a response from British F-35 fighters during NATO operations near Norway.",
+      "category": "NATO / RUSSIA",
+      "image": "tns-nato-f35-nov07.jpg",
+      "image_alt": "Conceptual illustration of NATO fighter aircraft",
+      "date": "2026-11-07"
+    },
+    {
+      "url": "task-force-iron-gate-iran-centcom-2026.html",
+      "headline": "NEW IRAN TASK FORCE!",
+      "summary": "U.S. Central Command is expanding its effort to restrict Iranian military-related commerce beyond sea routes.",
+      "category": "U.S. CENTRAL COMMAND",
+      "image": "tns-iran-taskforce-nov07.jpg",
+      "image_alt": "Conceptual illustration of naval operations",
+      "date": "2026-11-07"
+    }
+  ],
+  "hero_capacity": 10
+}
