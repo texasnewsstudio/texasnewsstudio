@@ -6,9 +6,9 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 queries = [
+  'National Weather Service nationwide internet communications issues when:1d',
   'FAA nationwide ground stop when:1d',
-  'FAA air traffic control communications outage when:1d',
-  'US flight delays FAA ground stop airports when:1d'
+  'FAA air traffic control communications outage when:1d'
 ]
 target = Path('data/faa-breaking-feed.json')
 previous = json.loads(target.read_text()) if target.exists() else {'items': []}
@@ -29,7 +29,7 @@ for i, query in enumerate(queries):
             try: date = parsedate_to_datetime(published).astimezone(timezone.utc)
             except Exception: continue
             if now-date > timedelta(hours=24) or date>now+timedelta(minutes=30): continue
-            if not any(k in title.lower() for k in ('faa','flight','airport','air traffic','ground stop')): continue
+            if not any(k in title.lower() for k in (('national weather service','nws','weather service') if i == 0 else ('faa','flight','airport','air traffic','ground stop'))): continue
             candidates.append({'title':title[:155],'url':link,'published':date.isoformat()})
         if candidates:
             items.append(candidates[0])
