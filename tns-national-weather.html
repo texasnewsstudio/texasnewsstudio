@@ -151,7 +151,7 @@
 </style>
 </head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
 <div class="layer-options">
-<label><input type="checkbox" data-layer="temperature" checked>Temperature colors</label>
+<label><input type="checkbox" data-layer="temperature">Temperature colors</label>
 <label><input type="checkbox" data-layer="cityTemps" checked>City temperatures</label>
 <label><input type="checkbox" data-layer="states" checked>State outlines</label>
 <label><input type="checkbox" data-layer="counties">County outlines</label>
@@ -194,8 +194,8 @@ const map=L.map('map',{zoomControl:false,scrollWheelZoom:true,dragging:true,doub
 const usaBounds=L.latLngBounds([25.0,-124.8],[49.0,-66.7]);
 // Homepage preview uses a fixed close-up zoom; fitBounds alone leaves huge margins
 // because the nationwide aspect ratio differs from the wide homepage panel.
-map.setView([38.3,-96.3],embedded?4.5:4.3,{animate:false});
-map.whenReady(()=>{map.invalidateSize(false);map.setView([38.3,-96.3],embedded?4.5:4.3,{animate:false});});
+map.setView([38.3,-96.3],embedded?4.15:4.3,{animate:false});
+map.whenReady(()=>{map.invalidateSize(false);map.setView([38.3,-96.3],embedded?4.15:4.3,{animate:false});});
 // Focus on the lower 48; allow visitors to zoom and pan on the full page.
 if(!embedded){map.setMaxBounds(L.latLngBounds([23,-128],[51,-63]));}
 map.setMinZoom(embedded?3:3);
@@ -222,7 +222,7 @@ const transportation=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/se
 const placeNames=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{
  pane:'placePane',maxZoom:18,opacity:.95,attribution:'Esri city and place labels'
 });
-const layerEnabled={spc:true,models:false,temperature:true,cityTemps:true,states:true,counties:false,radar:true,alerts:true,wpc:true,roads:true,places:false};
+const layerEnabled={spc:true,models:false,temperature:false,cityTemps:true,states:true,counties:false,radar:true,alerts:true,wpc:true,roads:true,places:false};
 function updateRoads(){
  const detailed=map.getZoom()>=6;
  for(const [key,layer] of [['roads',transportation],['places',placeNames]]){
