@@ -38,13 +38,13 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add sitemap.xml
           git commit -m "Automatically refresh sitemap for published pages"
-          # Regenerate against the latest main after every fetch to avoid sitemap merge conflicts.
+          # Always rebuild from the latest main to avoid conflicting sitemap commits.
           for attempt in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
             python scripts/generate_sitemap.py
             if git diff --quiet -- sitemap.xml; then
-              echo "Sitemap already current on main"
+              echo "Sitemap already current"
               exit 0
             fi
             git add sitemap.xml
@@ -53,18 +53,7 @@ jobs:
               echo "Sitemap published"
               exit 0
             fi
-            echo "Concurrent update; regenerating sitemap from latest main (attempt $attempt)"
             sleep $((attempt * 3))
           done
           echo "Could not publish sitemap after five attempts"
-          exit 1
-            fi
-            if git push origin HEAD:main; then
-              echo "Sitemap published"
-              exit 0
-            fi
-            echo "Push attempt $attempt failed; retrying"
-            sleep $((attempt * 3))
-          done
-          echo "Could not push sitemap after five attempts"
           exit 1
