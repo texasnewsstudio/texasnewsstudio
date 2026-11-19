@@ -38,14 +38,26 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add sitemap.xml
           git commit -m "Automatically refresh sitemap for published pages"
-          # Other publishing jobs may update main while this workflow runs.
-          # Rebase and retry instead of failing on a non-fast-forward push.
+          # Regenerate against the latest main after every fetch to avoid sitemap merge conflicts.
           for attempt in 1 2 3 4 5; do
             git fetch origin main
-            if ! git rebase origin/main; then
-              git rebase --abort || true
-              echo "Sitemap rebase conflict; manual review needed"
-              exit 1
+            git reset --hard origin/main
+            python scripts/generate_sitemap.py
+            if git diff --quiet -- sitemap.xml; then
+              echo "Sitemap already current on main"
+              exit 0
+            fi
+            git add sitemap.xml
+            git commit -m "Automatically refresh sitemap for published pages"
+            if git push origin HEAD:main; then
+              echo "Sitemap published"
+              exit 0
+            fi
+            echo "Concurrent update; regenerating sitemap from latest main (attempt $attempt)"
+            sleep $((attempt * 3))
+          done
+          echo "Could not publish sitemap after five attempts"
+          exit 1
             fi
             if git push origin HEAD:main; then
               echo "Sitemap published"
