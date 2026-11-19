@@ -615,8 +615,8 @@ function render(){
  labels.clearLayers();
  if(!layerEnabled.cityTemps)return;
  const boxes=[],sz=map.getSize(),z=map.getZoom();
- const displayStations=new Set(["KSFO","KBIS","KCAR","KSEA","KBIL","KRAP","KMSP","KORD","KJFK","KSLC","KDEN","KMCI","KCVG","KLAX","KPHX","KABQ","KOKC","KDFW","KMEM","KCLT","KATL","KMSY","KSAT","KTPA","KMIA"]);
- for(const o of [...observations].sort((a,b)=>{const priority=["KCAR","KSFO","KBIS","KMCI","KORD","KJFK"];return (priority.includes(b.id)?1:0)-(priority.includes(a.id)?1:0)})){
+ const displayStations=new Set(["KSFO","KBIS","KCAR","KSEA","KBIL","KRAP","KMSP","KORD","KJFK","KSLC","KDEN","KMCI","KOMA","KCVG","KLAX","KPHX","KABQ","KOKC","KDFW","KMEM","KCLT","KATL","KMSY","KSAT","KTPA","KMIA"]);
+ for(const o of [...observations].sort((a,b)=>{const priority=["KMCI","KCAR","KSFO","KBIS","KORD","KJFK"];return (priority.includes(a.id)?priority.indexOf(a.id):99)-(priority.includes(b.id)?priority.indexOf(b.id):99)})){
   if(!displayStations.has(o.id))continue;
   const p=map.latLngToContainerPoint([o.lat,o.lon]);
   const w=Math.max(62,Math.min(145,o.name.length*6.4+17))*(embedded?1:1.1),h=49;
