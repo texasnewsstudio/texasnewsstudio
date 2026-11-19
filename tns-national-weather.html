@@ -638,12 +638,29 @@ fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geo
 }).catch(()=>{});
 async function fetchTemps(){
  let ix=0;const data=[];
- async function work(){while(ix<cities.length){const [name,id,lat,lon]=cities[ix++];try{
-  const response=await fetch(`https://api.weather.gov/stations/${id}/observations/latest`,{headers:{Accept:'application/geo+json'},signal:AbortSignal.timeout(12000)});
-  if(!response.ok)continue;const p=(await response.json()).properties,c=p.temperature?.value,t=Date.parse(p.timestamp);
-  if(typeof c!=='number'||!Number.isFinite(t)||Date.now()-t>100*60000)continue;
-  data.push({name,id,lat,lon,temp:Math.round(c*9/5+32)});
- }catch(e){}}}
+ async function stationTemp(id){
+  try{
+   const response=await fetch(`https://api.weather.gov/stations/${id}/observations/latest`,{headers:{Accept:'application/geo+json'},signal:AbortSignal.timeout(12000)});
+   if(!response.ok)return null;
+   const p=(await response.json()).properties,c=p.temperature?.value,t=Date.parse(p.timestamp);
+   if(typeof c!=='number'||!Number.isFinite(t)||Date.now()-t>100*60000)return null;
+   return Math.round(c*9/5+32);
+  }catch(e){return null;}
+ }
+ async function work(){
+  while(ix<cities.length){
+   const [name,id,lat,lon]=cities[ix++];
+   let temp=await stationTemp(id);
+   // Keep NYC visible using another nearby airport if JFK is unavailable.
+   if(temp===null&&id==='KJFK'){
+    for(const backup of ['KLGA','KEWR']){
+     temp=await stationTemp(backup);
+     if(temp!==null)break;
+    }
+   }
+   if(temp!==null)data.push({name,id,lat,lon,temp});
+  }
+ }
  await Promise.all(Array.from({length:6},work));observations=data;heat();render();
 }
 fetchTemps();setInterval(()=>{if(layerEnabled.temperature||layerEnabled.cityTemps)fetchTemps()},12*60000);
