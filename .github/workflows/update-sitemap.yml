@@ -1,0 +1,39 @@
+name: Automatically update sitemap
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'scripts/generate_sitemap.py'
+      - '.github/workflows/update-sitemap.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: tns-sitemap-main
+  cancel-in-progress: false
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current site
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate sitemap
+        run: python scripts/generate_sitemap.py
+      - name: Commit sitemap if changed
+        run: |
+          if ! git diff --quiet -- sitemap.xml; then
+            git config user.name "TNS Sitemap Bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add sitemap.xml
+            git commit -m "Automatically refresh sitemap for published pages"
+            git push
+          else
+            echo "Sitemap already current"
+          fi
