@@ -565,7 +565,7 @@ const cities=[
 ["Jackson","KJAN",32.32,-90.08],["Birmingham","KBHM",33.56,-86.75],["Nashville","KBNA",36.12,-86.68],
 ["Louisville","KSDF",38.17,-85.74],["Indianapolis","KIND",39.72,-86.29],["Detroit","KDTW",42.21,-83.35],
 ["Cleveland","KCLE",41.41,-81.85],["Pittsburgh","KPIT",40.49,-80.23],["Buffalo","KBUF",42.94,-78.73],
-["Boston","KBOS",42.36,-71.01],["Philadelphia","KPHL",39.87,-75.24],["Washington","KDCA",38.85,-77.04],
+["Boston","KBOS",42.36,-71.01],["Caribou, ME","KCAR",46.87,-68.02],["Philadelphia","KPHL",39.87,-75.24],["Washington","KDCA",38.85,-77.04],
 ["Raleigh","KRDU",35.88,-78.79],["Charleston","KCHS",32.9,-80.04],["Jacksonville","KJAX",30.49,-81.69],
 ["Orlando","KMCO",28.43,-81.31],["Pensacola","KPNS",30.47,-87.19],["Mobile","KMOB",30.69,-88.24],
 ["Cheyenne","KCYS",41.16,-104.81],["Casper","KCPR",42.91,-106.46],["Grand Junction","KGJT",39.12,-108.53]
@@ -615,8 +615,8 @@ function render(){
  labels.clearLayers();
  if(!layerEnabled.cityTemps)return;
  const boxes=[],sz=map.getSize(),z=map.getZoom();
- const displayStations=new Set(["KSEA","KBIL","KRAP","KMSP","KORD","KJFK","KSLC","KDEN","KMCI","KCVG","KLAX","KPHX","KABQ","KOKC","KDFW","KMEM","KCLT","KATL","KMSY","KSAT","KTPA","KMIA"]);
- for(const o of observations){
+ const displayStations=new Set(["KSFO","KBIS","KCAR","KSEA","KBIL","KRAP","KMSP","KORD","KJFK","KSLC","KDEN","KMCI","KCVG","KLAX","KPHX","KABQ","KOKC","KDFW","KMEM","KCLT","KATL","KMSY","KSAT","KTPA","KMIA"]);
+ for(const o of [...observations].sort((a,b)=>{const priority=["KCAR","KSFO","KBIS","KMCI","KORD","KJFK"];return (priority.includes(b.id)?1:0)-(priority.includes(a.id)?1:0)})){
   if(!displayStations.has(o.id))continue;
   const p=map.latLngToContainerPoint([o.lat,o.lon]);
   const w=Math.max(62,Math.min(145,o.name.length*6.4+17))*(embedded?1:1.1),h=49;
