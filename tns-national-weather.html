@@ -175,17 +175,20 @@
 <div class="layer-help">Turn on only what you need. Heavy layers load on demand. Roads and place names show when zoomed in.</div>
 </div></details>
 <style id="tns-dockable-panels-20261121">
-/* Non-destructive docking controls for the two national map rails. */
-.tns-news-rail,.tns-alert-center{pointer-events:auto!important;box-sizing:border-box!important;transition:width .18s ease;resize:horizontal;overflow:auto;min-width:148px;max-width:min(42vw,420px)!important}
-.tns-news-rail{width:220px;max-width:min(42vw,420px)!important;direction:rtl}
-.tns-news-rail>*{direction:ltr}
-.tns-alert-center{width:240px}
-.tns-news-rail.tns-docked,.tns-alert-center.tns-docked{width:36px!important;min-width:36px!important;max-width:36px!important;resize:none;overflow:visible;padding:5px!important;background:#09233e!important}
-.tns-news-rail.tns-docked>*:not(.tns-dock-button),.tns-alert-center.tns-docked>*:not(.tns-dock-button){display:none!important}
-.tns-dock-button{display:block!important;position:relative;z-index:10;width:100%;min-height:28px;padding:4px 5px;border:1px solid #83b5dc;border-radius:3px;background:#17466c;color:white;font:bold 12px Arial,sans-serif;cursor:pointer;direction:ltr}
-.tns-dock-button:focus-visible{outline:3px solid #fff}
-.tns-news-rail:not(.tns-docked) .tns-dock-button,.tns-alert-center:not(.tns-docked) .tns-dock-button{margin-bottom:8px}
-@media(max-width:650px){.tns-news-rail,.tns-alert-center{width:min(36vw,190px);min-width:100px;max-width:42vw!important;resize:none}.tns-news-rail.tns-docked,.tns-alert-center.tns-docked{min-width:36px}}
+/* Map overlays: hidden means the entire panel is gone, not a narrow background strip. */
+.tns-news-rail,.tns-alert-center{pointer-events:auto!important;box-sizing:border-box!important;width:220px!important;min-width:0!important;max-width:min(45vw,460px)!important;resize:none!important;overflow:visible!important;transition:opacity .15s ease!important}
+.tns-alert-center{width:240px!important}
+.tns-news-rail.tns-docked,.tns-alert-center.tns-docked{display:none!important}
+.tns-dock-button{display:block!important;width:100%;min-height:28px;margin-bottom:8px;padding:4px 7px;border:1px solid #83b5dc;border-radius:3px;background:#17466c;color:white;font:bold 12px Arial,sans-serif;cursor:pointer}
+.tns-dock-restore{position:absolute;top:50%;z-index:900;transform:translateY(-50%);padding:10px 5px;border:1px solid #83b5dc;background:#123b60;color:white;border-radius:3px;font:bold 12px Arial,sans-serif;cursor:pointer;writing-mode:vertical-rl}
+.tns-dock-restore[data-side="left"]{left:0}.tns-dock-restore[data-side="right"]{right:0}
+.tns-dock-restore[hidden]{display:none!important}
+.tns-panel-resizer{position:absolute;top:0;bottom:0;width:12px;z-index:15;cursor:ew-resize;touch-action:none;background:linear-gradient(90deg,transparent 35%,#87b7d5 50%,transparent 65%);opacity:.65}
+.tns-news-rail .tns-panel-resizer{right:-7px}.tns-alert-center .tns-panel-resizer{left:-7px}
+.tns-panel-opacity{display:flex;align-items:center;gap:7px;margin:5px 0 8px;font:11px Arial,sans-serif;color:#d9ebff}
+.tns-panel-opacity input{width:100%;min-width:40px;accent-color:#64baff}
+.tns-dock-button:focus-visible,.tns-dock-restore:focus-visible{outline:3px solid white}
+@media(max-width:650px){.tns-news-rail,.tns-alert-center{max-width:46vw!important}.tns-panel-resizer{display:none!important}}
 </style>
 <aside class="info tns-news-rail" aria-label="Rotating national weather news"><strong class="tns-news-head">TNS WEATHER NEWS</strong><div class="tns-news-scroll" id="tns-news-scroll"><div id="tns-news-items">Loading weather headlines…</div></div><div class="tns-news-foot"><span id="tns-news-source">LAST 24 HOURS</span><button id="tns-news-toggle" type="button">Pause</button></div></aside>
 <aside class="overlay-status tns-alert-center" aria-label="Live national NWS alert center">
@@ -853,20 +856,21 @@ load();setInterval(load,300000);
 (function(){
 function setup(selector,side){
  var panel=document.querySelector(selector);if(!panel)return;
- var button=document.createElement('button');button.type='button';button.className='tns-dock-button';
- button.setAttribute('aria-label','Collapse '+side+' weather panel');
- panel.insertBefore(button,panel.firstChild);
- function setCollapsed(collapsed){
-  panel.classList.toggle('tns-docked',collapsed);
-  button.textContent=collapsed?(side==='left'?'▶ News':'◀ Alerts'):(side==='left'?'◀ Hide News':'Hide Alerts ▶');
-  button.setAttribute('aria-expanded',String(!collapsed));
-  button.setAttribute('aria-label',(collapsed?'Expand ':'Collapse ')+side+' weather panel');
-  button.title=collapsed?'Restore panel':'Collapse panel to reveal more map';
- }
- button.addEventListener('click',function(){setCollapsed(!panel.classList.contains('tns-docked'))});
- setCollapsed(false);
+ var hide=document.createElement('button');hide.type='button';hide.className='tns-dock-button';hide.textContent='✕ Hide '+(side==='left'?'News':'Alerts');
+ panel.insertBefore(hide,panel.firstChild);
+ var restore=document.createElement('button');restore.type='button';restore.className='tns-dock-restore';restore.dataset.side=side;restore.textContent=side==='left'?'▶ WEATHER NEWS':'◀ WEATHER ALERTS';restore.hidden=true;restore.setAttribute('aria-label','Show '+(side==='left'?'weather news':'weather alerts'));document.body.appendChild(restore);
+ function toggle(hidden){panel.classList.toggle('tns-docked',hidden);restore.hidden=!hidden;hide.setAttribute('aria-expanded',String(!hidden));}
+ hide.addEventListener('click',function(){toggle(true)});restore.addEventListener('click',function(){toggle(false)});
+ var opacity=document.createElement('label');opacity.className='tns-panel-opacity';opacity.textContent='Panel opacity';
+ var slider=document.createElement('input');slider.type='range';slider.min='25';slider.max='100';slider.value='95';slider.step='5';slider.setAttribute('aria-label','Panel opacity');opacity.appendChild(slider);hide.insertAdjacentElement('afterend',opacity);
+ slider.addEventListener('input',function(){panel.style.opacity=String(Number(slider.value)/100)});
+ var grip=document.createElement('div');grip.className='tns-panel-resizer';grip.setAttribute('role','separator');grip.setAttribute('aria-label','Drag to resize panel');grip.setAttribute('aria-orientation','vertical');panel.appendChild(grip);
+ grip.addEventListener('pointerdown',function(e){if(e.button!==0)return;e.preventDefault();grip.setPointerCapture(e.pointerId);document.body.style.userSelect='none';});
+ grip.addEventListener('pointermove',function(e){if(!grip.hasPointerCapture(e.pointerId))return;var width=side==='left'?e.clientX-panel.getBoundingClientRect().left:panel.getBoundingClientRect().right-e.clientX;panel.style.setProperty('width',Math.max(150,Math.min(Math.round(window.innerWidth*.45),width))+'px','important');});
+ function stop(e){if(grip.hasPointerCapture(e.pointerId))grip.releasePointerCapture(e.pointerId);document.body.style.userSelect='';}
+ grip.addEventListener('pointerup',stop);grip.addEventListener('pointercancel',stop);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setup('.tns-news-rail','left');setup('.tns-alert-center','right')});
-else{setup('.tns-news-rail','left');setup('.tns-alert-center','right')}
+function init(){setup('.tns-news-rail','left');setup('.tns-alert-center','right')}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
