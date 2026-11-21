@@ -149,7 +149,25 @@
 .leaflet-overlay-pane path.tns-tornado-blink.tns-pds{stroke-width:7px!important;stroke-dasharray:12 5;animation-duration:.7s}
 @media(prefers-reduced-motion:reduce){.leaflet-overlay-pane path.tns-tornado-blink{animation:none!important;stroke-opacity:1!important;fill-opacity:.22!important}}
 </style>
-</head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
+<style id="tns-panel-specificity-fix-20261121">
+/* Override older .info.tns-news-rail and .overlay-status.tns-alert-center !important declarations. */
+html body aside.info.tns-news-rail.tns-docked,
+html body aside.overlay-status.tns-alert-center.tns-docked,
+html body.embed aside.info.tns-news-rail.tns-docked,
+html body.embed aside.overlay-status.tns-alert-center.tns-docked {
+ display:none!important;visibility:hidden!important;pointer-events:none!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ width:0!important;max-width:0!important;padding:0!important;
+}
+html body aside.info.tns-news-rail:not(.tns-docked),
+html body aside.overlay-status.tns-alert-center:not(.tns-docked) {
+ width:var(--tns-user-width,220px)!important;max-width:min(45vw,460px)!important;
+ overflow:visible!important;
+}
+html body aside.info.tns-news-rail:not(.tns-docked){padding:10px 8px!important}
+html body aside.overlay-status.tns-alert-center:not(.tns-docked){padding:8px!important}
+html body .tns-dock-restore{position:fixed!important;z-index:99999!important;pointer-events:auto!important}
+</style></head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
 <div class="layer-options">
 <label><input type="checkbox" data-layer="temperature">Temperature colors</label>
 <label><input type="checkbox" data-layer="cityTemps" checked>City temperatures</label>
@@ -866,7 +884,7 @@ function setup(selector,side){
  slider.addEventListener('input',function(){panel.style.opacity=String(Number(slider.value)/100)});
  var grip=document.createElement('div');grip.className='tns-panel-resizer';grip.setAttribute('role','separator');grip.setAttribute('aria-label','Drag to resize panel');grip.setAttribute('aria-orientation','vertical');panel.appendChild(grip);
  grip.addEventListener('pointerdown',function(e){if(e.button!==0)return;e.preventDefault();grip.setPointerCapture(e.pointerId);document.body.style.userSelect='none';});
- grip.addEventListener('pointermove',function(e){if(!grip.hasPointerCapture(e.pointerId))return;var width=side==='left'?e.clientX-panel.getBoundingClientRect().left:panel.getBoundingClientRect().right-e.clientX;panel.style.setProperty('width',Math.max(150,Math.min(Math.round(window.innerWidth*.45),width))+'px','important');});
+ grip.addEventListener('pointermove',function(e){if(!grip.hasPointerCapture(e.pointerId))return;var width=side==='left'?e.clientX-panel.getBoundingClientRect().left:panel.getBoundingClientRect().right-e.clientX;panel.style.setProperty('--tns-user-width',Math.max(150,Math.min(Math.round(window.innerWidth*.45),width))+'px');});
  function stop(e){if(grip.hasPointerCapture(e.pointerId))grip.releasePointerCapture(e.pointerId);document.body.style.userSelect='';}
  grip.addEventListener('pointerup',stop);grip.addEventListener('pointercancel',stop);
 }
