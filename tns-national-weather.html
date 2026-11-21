@@ -174,6 +174,19 @@
 </div>
 <div class="layer-help">Turn on only what you need. Heavy layers load on demand. Roads and place names show when zoomed in.</div>
 </div></details>
+<style id="tns-dockable-panels-20261121">
+/* Non-destructive docking controls for the two national map rails. */
+.tns-news-rail,.tns-alert-center{pointer-events:auto!important;box-sizing:border-box!important;transition:width .18s ease;resize:horizontal;overflow:auto;min-width:148px;max-width:min(42vw,420px)!important}
+.tns-news-rail{width:220px;max-width:min(42vw,420px)!important;direction:rtl}
+.tns-news-rail>*{direction:ltr}
+.tns-alert-center{width:240px}
+.tns-news-rail.tns-docked,.tns-alert-center.tns-docked{width:36px!important;min-width:36px!important;max-width:36px!important;resize:none;overflow:visible;padding:5px!important;background:#09233e!important}
+.tns-news-rail.tns-docked>*:not(.tns-dock-button),.tns-alert-center.tns-docked>*:not(.tns-dock-button){display:none!important}
+.tns-dock-button{display:block!important;position:relative;z-index:10;width:100%;min-height:28px;padding:4px 5px;border:1px solid #83b5dc;border-radius:3px;background:#17466c;color:white;font:bold 12px Arial,sans-serif;cursor:pointer;direction:ltr}
+.tns-dock-button:focus-visible{outline:3px solid #fff}
+.tns-news-rail:not(.tns-docked) .tns-dock-button,.tns-alert-center:not(.tns-docked) .tns-dock-button{margin-bottom:8px}
+@media(max-width:650px){.tns-news-rail,.tns-alert-center{width:min(36vw,190px);min-width:100px;max-width:42vw!important;resize:none}.tns-news-rail.tns-docked,.tns-alert-center.tns-docked{min-width:36px}}
+</style>
 <aside class="info tns-news-rail" aria-label="Rotating national weather news"><strong class="tns-news-head">TNS WEATHER NEWS</strong><div class="tns-news-scroll" id="tns-news-scroll"><div id="tns-news-items">Loading weather headlines…</div></div><div class="tns-news-foot"><span id="tns-news-source">LAST 24 HOURS</span><button id="tns-news-toggle" type="button">Pause</button></div></aside>
 <aside class="overlay-status tns-alert-center" aria-label="Live national NWS alert center">
   <div class="tns-alert-banner"><span class="tns-alert-dot"></span> TNS WEATHER ALERT CENTER <span class="tns-live-chip">LIVE</span></div>
@@ -835,5 +848,25 @@ setInterval(()=>{
  setTimeout(()=>moving=false,1100);
 },6500);
 load();setInterval(load,300000);
+})();
+</script><script id="tns-dockable-panels-script-20261121">
+(function(){
+function setup(selector,side){
+ var panel=document.querySelector(selector);if(!panel)return;
+ var button=document.createElement('button');button.type='button';button.className='tns-dock-button';
+ button.setAttribute('aria-label','Collapse '+side+' weather panel');
+ panel.insertBefore(button,panel.firstChild);
+ function setCollapsed(collapsed){
+  panel.classList.toggle('tns-docked',collapsed);
+  button.textContent=collapsed?(side==='left'?'▶ News':'◀ Alerts'):(side==='left'?'◀ Hide News':'Hide Alerts ▶');
+  button.setAttribute('aria-expanded',String(!collapsed));
+  button.setAttribute('aria-label',(collapsed?'Expand ':'Collapse ')+side+' weather panel');
+  button.title=collapsed?'Restore panel':'Collapse panel to reveal more map';
+ }
+ button.addEventListener('click',function(){setCollapsed(!panel.classList.contains('tns-docked'))});
+ setCollapsed(false);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setup('.tns-news-rail','left');setup('.tns-alert-center','right')});
+else{setup('.tns-news-rail','left');setup('.tns-alert-center','right')}
 })();
 </script></body></html>
