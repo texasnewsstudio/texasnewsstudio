@@ -798,6 +798,11 @@ nav[aria-label="Main navigation"] .tns-nav-support>.tns-submenu a{white-space:no
 .tns-network-inner :last-child{border-right:0}
 @media(max-width:850px){.tns-network-inner{justify-content:flex-start}.tns-network-inner a,.tns-network-inner span{padding:9px 12px;font-size:10px}}
 .tns-network-inner a.tns-network-advertise{color:#f4d38b;font-size:14px;font-weight:900;letter-spacing:.075em;text-shadow:0 0 9px rgba(222,170,72,.15);border-left:1px solid rgba(231,184,91,.38)}.tns-network-inner a.tns-network-advertise:hover,.tns-network-inner a.tns-network-advertise:focus-visible{color:#ffe7ad;background:#292418}@media(max-width:850px){.tns-network-inner a.tns-network-advertise{font-size:13px}}
+/* Responsive network bar: preserve centered desktop, scroll on narrow screens. */
+.tns-network-bar{background:#101319!important;width:100%;max-width:100%;box-sizing:border-box;overflow-x:auto!important;overflow-y:hidden!important}
+.tns-network-bar .tns-network-inner{display:flex!important;flex-wrap:nowrap!important;overflow:visible!important;width:max-content;min-width:100%;box-sizing:border-box;justify-content:center;gap:0}
+.tns-network-bar .tns-network-inner>a{flex:0 0 auto}
+@media(max-width:1100px){.tns-network-bar .tns-network-inner{justify-content:flex-start}}
 </style>
 <div aria-label="Texas News Studio network properties" class="tns-network-bar"><div class="tns-network-inner">
 <a href="https://weather.texasnewsstudio.com/" rel="noopener noreferrer" target="_blank">TNS WEATHER ↗</a>
