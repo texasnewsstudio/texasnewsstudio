@@ -167,7 +167,7 @@ html body aside.overlay-status.tns-alert-center:not(.tns-docked) {
 html body aside.info.tns-news-rail:not(.tns-docked){padding:10px 8px!important}
 html body aside.overlay-status.tns-alert-center:not(.tns-docked){padding:8px!important}
 html body .tns-dock-restore{position:fixed!important;z-index:99999!important;pointer-events:auto!important}
-</style></head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
+</style><style id="tns-hover-only-side-menus">.tns-dock-restore{opacity:0!important;background:transparent!important;border:0!important;box-shadow:none!important;width:24px;min-height:150px;padding:0!important;overflow:hidden}.tns-dock-restore:focus-visible{opacity:1!important;background:#123b60!important}@media(hover:none){.tns-dock-restore{opacity:1!important;background:#123b60!important;width:24px}}</style></head><body><div id="map"></div><details class="layer-menu" id="layer-menu"><summary>☰ MAP LAYERS · ON / OFF</summary>
 <div class="layer-options">
 <label><input type="checkbox" data-layer="temperature">Temperature colors</label>
 <label><input type="checkbox" data-layer="cityTemps" checked>City temperatures</label>
@@ -208,8 +208,8 @@ html body .tns-dock-restore{position:fixed!important;z-index:99999!important;poi
 .tns-dock-button:focus-visible,.tns-dock-restore:focus-visible{outline:3px solid white}
 @media(max-width:650px){.tns-news-rail,.tns-alert-center{max-width:46vw!important}.tns-panel-resizer{display:none!important}}
 </style>
-<aside class="info tns-news-rail" aria-label="Rotating national weather news"><strong class="tns-news-head">TNS WEATHER NEWS</strong><div class="tns-news-scroll" id="tns-news-scroll"><div id="tns-news-items">Loading weather headlines…</div></div><div class="tns-news-foot"><span id="tns-news-source">LAST 24 HOURS</span><button id="tns-news-toggle" type="button">Pause</button></div></aside>
-<aside class="overlay-status tns-alert-center" aria-label="Live national NWS alert center">
+<aside class="info tns-news-rail tns-docked" aria-label="Rotating national weather news"><strong class="tns-news-head">TNS WEATHER NEWS</strong><div class="tns-news-scroll" id="tns-news-scroll"><div id="tns-news-items">Loading weather headlines…</div></div><div class="tns-news-foot"><span id="tns-news-source">LAST 24 HOURS</span><button id="tns-news-toggle" type="button">Pause</button></div></aside>
+<aside class="overlay-status tns-alert-center tns-docked" aria-label="Live national NWS alert center">
   <div class="tns-alert-banner"><span class="tns-alert-dot"></span> TNS WEATHER ALERT CENTER <span class="tns-live-chip">LIVE</span></div>
   <div class="tns-alert-counts" aria-label="Active NWS warning and watch totals">
     <div class="tns-count tns-count-red"><span id="tns-count-tornado">—</span><small>TORNADO<br>WARNINGS</small></div>
@@ -878,7 +878,7 @@ function setup(selector,side){
  panel.insertBefore(hide,panel.firstChild);
  var restore=document.createElement('button');restore.type='button';restore.className='tns-dock-restore';restore.dataset.side=side;restore.textContent=side==='left'?'▶ WEATHER NEWS':'◀ WEATHER ALERTS';restore.hidden=true;restore.setAttribute('aria-label','Show '+(side==='left'?'weather news':'weather alerts'));document.body.appendChild(restore);
  function toggle(hidden){panel.classList.toggle('tns-docked',hidden);restore.hidden=!hidden;hide.setAttribute('aria-expanded',String(!hidden));}
- hide.addEventListener('click',function(){toggle(true)});restore.addEventListener('click',function(){toggle(false)});
+ hide.addEventListener('click',function(){toggle(true)});restore.addEventListener('click',function(){toggle(false)});restore.addEventListener('mouseenter',function(){toggle(false)});panel.addEventListener('mouseleave',function(){if(matchMedia('(hover: hover)').matches)toggle(true)});panel.addEventListener('focusout',function(e){if(!panel.contains(e.relatedTarget)&&matchMedia('(hover: hover)').matches)toggle(true)});panel.addEventListener('keydown',function(e){if(e.key==='Escape'){toggle(true);restore.focus()}});toggle(true);
  var opacity=document.createElement('label');opacity.className='tns-panel-opacity';opacity.textContent='Panel opacity';
  var slider=document.createElement('input');slider.type='range';slider.min='25';slider.max='100';slider.value='95';slider.step='5';slider.setAttribute('aria-label','Panel opacity');opacity.appendChild(slider);hide.insertAdjacentElement('afterend',opacity);
  slider.addEventListener('input',function(){panel.style.opacity=String(Number(slider.value)/100)});
