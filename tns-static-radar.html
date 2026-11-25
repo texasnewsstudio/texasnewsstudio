@@ -41,7 +41,7 @@
 </style></head><body><header class="head"><div class="map-heading"><div class="title">TEXAS RADAR</div><div class="subtitle">IOWA STATE NEXRAD • REFLECTIVITY</div></div></header><div id="map" class="map"></div><aside id="spcLegend" aria-label="Weather map legend"><div class="tns-legend-head"><span class="tns-legend-kicker">TNS WEATHER DATA</span><div id="tnsLegendTitle">LIVE RADAR</div><div id="tnsLegendDesc">PRECIPITATION INTENSITY</div></div><div id="tnsLegendBody"></div><div id="nwsState" hidden></div><div id="spcState" hidden></div><div class="tns-legend-foot"><span id="tnsLegendSource">IOWA STATE MESONET</span><span class="tns-live-dot">● LIVE DATA</span></div><div class="tns-legend-data" id="tnsLegendData"></div></aside><div class="status">Connecting to weather data…</div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 const qs=new URLSearchParams(location.search);if(qs.has('embed'))document.documentElement.classList.add('embed');
 const status=document.querySelector('.status');
-const map=L.map('map',{zoomControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,attributionControl:true}).fitBounds([[25.7,-106.9],[36.6,-93.4]],{padding:[8,8]});
+const map=L.map('map',{zoomControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,attributionControl:true}).fitBounds([[25.2,-108.4],[38.1,-90.6]],{padding:[8,8]});
 // Match the left-side Texas Temperatures terrain basemap, without any API key.
 const terrainImagery=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Imagery: Esri'}).addTo(map);
 const relief=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,opacity:.38,attribution:'Relief: Esri'}).addTo(map);
@@ -226,7 +226,8 @@ loadRadar();setInterval(loadRadar,300000);
    const mapEl=document.getElementById('map');if(mapEl)mapEl.style.width='';
    setTimeout(()=>map.invalidateSize(false),80);
  }
- show(0);setInterval(()=>{if(!paused)show((index+1)%views.length)},10000);
+ window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='tns-weather-mode'&&Number.isInteger(e.data.index)&&e.data.index>=0&&e.data.index<views.length)show(e.data.index)});
+ show(0);setInterval(()=>{if(!paused&&!qs.has('controlled'))show((index+1)%views.length)},10000);
  window.addEventListener('message',e=>{if(e.data&&e.data.type==='tns-carousel-pause')paused=!!e.data.paused});
  document.addEventListener('visibilitychange',()=>{paused=document.hidden});
 })();
