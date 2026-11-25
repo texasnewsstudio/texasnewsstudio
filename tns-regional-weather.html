@@ -13,7 +13,7 @@
 </style></head><body><header class="head"><div class="map-heading"><div class="title" id="tns-mode-title">TEXAS TEMPERATURES</div><div class="subtitle" id="tns-mode-subtitle">LIVE NWS OBSERVATIONS • FAHRENHEIT</div></div></header><div id="map" class="map"></div><div id="tns-temp-scale"><div class="scale-title">TEMPERATURES</div><div class="gradient"></div><div class="numbers"></div></div><div class="status">Connecting to weather data…</div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 const qs=new URLSearchParams(location.search);if(qs.has('embed'))document.documentElement.classList.add('embed');
 const status=document.querySelector('.status');
-const map=L.map('map',{zoomControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,attributionControl:true}).fitBounds([[25.2,-108.4],[38.1,-90.6]],{padding:[8,8]});
+const map=L.map('map',{zoomSnap:0.1,zoomControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,attributionControl:true}).fitBounds([[25.7,-106.7],[37.9,-92.1]],{padding:[0,0]});
 // TNS cinematic terrain: actual satellite imagery + relief shading below live NWS observations.
 const terrainImagery=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Imagery: Esri',crossOrigin:true}).addTo(map);
 const relief=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,opacity:.38,attribution:'Relief: Esri'}).addTo(map);
