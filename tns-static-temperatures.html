@@ -38,7 +38,8 @@ const modes=[
  {name:'TEXAS DEW POINTS',sub:'LIVE NWS OBSERVATIONS • °F',key:'dew',unit:'°',stops:[[20,[157,113,72]],[35,[220,181,87]],[45,[112,185,112]],[55,[60,176,165]],[65,[45,125,202]],[75,[129,74,195]]]},
  {name:'TEXAS HUMIDITY',sub:'LIVE NWS OBSERVATIONS • RELATIVE HUMIDITY',key:'rh',unit:'%',stops:[[10,[174,114,60]],[30,[229,179,77]],[50,[154,189,99]],[70,[73,173,164]],[90,[48,105,189]],[100,[94,73,160]]]},
  {name:'TEXAS FEELS LIKE',sub:'REPORTED NWS APPARENT TEMPERATURE • °F',key:'feels',unit:'°',stops:[[20,[47,90,175]],[35,[67,164,196]],[50,[85,187,139]],[65,[220,203,79]],[80,[235,148,60]],[95,[211,72,59]],[110,[137,43,100]]]}
-];
+,{name:'TEXAS WIND SPEED',sub:'LIVE NWS OBSERVATIONS • MPH',key:'wind',unit:' mph',stops:[[0,[65,130,190]],[10,[70,180,150]],[20,[220,200,70]],[35,[230,100,55]],[50,[155,45,120]]]},
+{name:'TEXAS WIND GUSTS',sub:'REPORTED NWS GUSTS • MPH',key:'gust',unit:' mph',stops:[[0,[65,130,190]],[15,[70,180,150]],[30,[220,200,70]],[45,[230,100,55]],[60,[155,45,120]]]}];
 function setMode(index){
  activeMode=index%modes.length;
  const m=modes[activeMode];
@@ -59,9 +60,10 @@ function setMode(index){
   scale.querySelector('.numbers').innerHTML=m.stops.map(v=>'<span>'+v[0]+'</span>').join('');
  }
  const count=temperatureData.length;
- status.textContent=count?`${count} fresh NWS observations • ${activeMode===3?'Reported apparent temperatures only':'Observed station values'} • Rotates every 10 sec`:'Recent observations unavailable for this layer';
+ status.textContent=count?`${count} fresh NWS observations • ${activeMode===3?'Reported apparent temperatures only':'Observed station values'}`:'Recent observations unavailable for this layer';
 }
-setInterval(()=>setMode(activeMode+1),10000);
+if(!qs.has('controlled'))setInterval(()=>setMode(activeMode+1),10000);
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.type==='tns-weather-mode'&&Number.isInteger(e.data.index)&&e.data.index>=0&&e.data.index<modes.length)setMode(e.data.index)});
 
 const heatCanvas=document.createElement('canvas');
 const gradientPane=map.createPane('tnsGradientPane');
@@ -159,7 +161,7 @@ async function getStation([name,id,lat,lon]){
   const c=p.temperature?.value, stamp=Date.parse(p.timestamp||'');
   if(typeof c!=='number'||!Number.isFinite(c)||!Number.isFinite(stamp)||Date.now()-stamp>90*60000||stamp>Date.now()+60000)return null;
   const dewC=p.dewpoint?.value,rh=p.relativeHumidity?.value,feelsC=p.apparentTemperature?.value;
-  return {name,lat,lon,f:Math.round(c*9/5+32),
+  return {name,lat,lon,wind:Number.isFinite(p.windSpeed?.value)?Math.round(p.windSpeed.value*(p.windSpeed.unitCode?.endsWith('m_s-1')?2.23694:0.621371)):null,gust:Number.isFinite(p.windGust?.value)?Math.round(p.windGust.value*(p.windGust.unitCode?.endsWith('m_s-1')?2.23694:0.621371)):null,f:Math.round(c*9/5+32),
    dew:typeof dewC==='number'?Math.round(dewC*9/5+32):null,
    rh:typeof rh==='number'&&rh>=0&&rh<=100?Math.round(rh):null,
    feels:typeof feelsC==='number'&&Number.isFinite(feelsC)?Math.round(feelsC*9/5+32):null,stamp};
