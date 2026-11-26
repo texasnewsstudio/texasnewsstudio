@@ -373,6 +373,17 @@ setInterval(()=>{if(activeSPC!=='spc1'&&activeSPC!=='none')showSPC(activeSPC)},3
 
 map.on('moveend',()=>{renderCityLabels();detailLayers();renderTemps();renderConditions()});
 function clock(){$('clock').textContent=new Date().toLocaleString('en-US',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit',second:'2-digit',timeZone:'America/Chicago',timeZoneName:'short'})}
-clock();setInterval(clock,1000);refreshAlerts();setInterval(refreshAlerts,90000);updateTemps();setInterval(updateTemps,300000);detailLayers();setTimeout(restartRadar,500);/* Automatic camera tour disabled: visitors control the map. */
+clock();setInterval(clock,1000);refreshAlerts();setInterval(refreshAlerts,90000);updateTemps();setInterval(updateTemps,300000);detailLayers();setTimeout(restartRadar,500);/* Optional OBS-only regional camera rotation. */
+if(new URLSearchParams(location.search).get('embed')==='1'){
+ const regions=[['UNITED STATES',[[24,-125],[50,-66]]],['PACIFIC NORTHWEST',[[40,-125],[49.5,-110]]],['SOUTHWEST',[[30,-125],[40,-102]]],['ROCKIES',[[35,-116],[49,-102]]],['NORTHERN PLAINS',[[40,-105],[49.5,-94]]],['TEXAS / SOUTHERN PLAINS',[[25.5,-107],[38,-93]]],['MIDWEST',[[36,-98],[49,-80]]],['SOUTHEAST',[[24,-92],[37,-75]]],['NORTHEAST',[[37,-82],[48,-66]]]];
+ const b=document.createElement('button');b.type='button';b.textContent='AUTO ROTATE: OFF';b.setAttribute('aria-pressed','false');b.style.cssText='position:absolute;right:10px;bottom:12px;z-index:1500;background:#102b40;color:white;border:1px solid #a6c9df;border-radius:4px;padding:8px 12px;font:bold 12px Arial;cursor:pointer';$('mapWrap').appendChild(b);
+ let timer=null,index=0;const bug=$('regionBug');
+ function step(){const [name,bounds]=regions[index];index=(index+1)%regions.length;map.stop();map.flyToBounds(bounds,{padding:[15,15],maxZoom:7,duration:1.5});bug.textContent=name;bug.classList.add('show');}
+ function stop(){clearInterval(timer);timer=null;map.stop();b.textContent='AUTO ROTATE: OFF';b.setAttribute('aria-pressed','false');bug.classList.remove('show');}
+ b.addEventListener('click',()=>{if(timer!==null){stop();return}index=0;b.textContent='AUTO ROTATE: ON';b.setAttribute('aria-pressed','true');step();timer=setInterval(step,15000)});
+ map.on('dragstart',()=>{if(timer!==null)stop()});
+ $('goTexas').addEventListener('click',()=>{if(timer!==null){clearInterval(timer);timer=null;b.textContent='AUTO ROTATE: OFF';b.setAttribute('aria-pressed','false');bug.classList.remove('show')}},true);
+ $('goHill').addEventListener('click',()=>{if(timer!==null){clearInterval(timer);timer=null;b.textContent='AUTO ROTATE: OFF';b.setAttribute('aria-pressed','false');bug.classList.remove('show')}},true);
+}
 })();
 </script></body></html>
