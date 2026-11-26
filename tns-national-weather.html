@@ -381,7 +381,7 @@ if(new URLSearchParams(location.search).get('embed')==='1'){
  function step(){const [name,bounds]=regions[index];index=(index+1)%regions.length;map.stop();map.flyToBounds(bounds,{padding:[15,15],maxZoom:7,duration:1.5});bug.textContent=name;bug.classList.add('show');}
  function stop(){clearInterval(timer);timer=null;map.stop();b.textContent='AUTO ROTATE: OFF';b.setAttribute('aria-pressed','false');bug.classList.remove('show');}
  b.addEventListener('click',()=>{if(timer!==null){stop();return}index=0;b.textContent='AUTO ROTATE: ON';b.setAttribute('aria-pressed','true');step();timer=setInterval(step,15000)});
- b.style.display='none';
+ b.style.display='block';b.id='tnsAutoRotateHover';b.style.opacity='0';b.style.transition='opacity .18s ease';b.addEventListener('pointerenter',()=>b.style.opacity='1');b.addEventListener('pointerleave',()=>b.style.opacity='0');b.addEventListener('focus',()=>b.style.opacity='1');b.addEventListener('blur',()=>b.style.opacity='0');b.addEventListener('click',()=>b.blur());
  window.addEventListener('keydown',e=>{if(e.code==='KeyA'&&!e.repeat&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!/INPUT|TEXTAREA|SELECT/.test(e.target?.tagName||'')&&!e.target?.isContentEditable){e.preventDefault();b.click()}});
  window.addEventListener('message',e=>{if(e.source===window.parent&&e.data?.type==='TNS_ROTATE_TOGGLE')b.click()});
  map.on('dragstart',()=>{if(timer!==null)stop()});
